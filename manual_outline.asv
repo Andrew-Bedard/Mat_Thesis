@@ -1,0 +1,7 @@
+
+%Allows one to 
+
+I = imread('Fox_late-gastrula2.jpg');
+I = rgb2gray(I)
+figure, imshow(I)
+BW = roipoly(I)
