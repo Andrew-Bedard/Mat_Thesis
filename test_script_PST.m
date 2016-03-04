@@ -22,10 +22,10 @@ title('Original Image')
 Image_orig=double(Image_orig);
 
 % low-pass filtering (also called localization) parameter
-handles.LPF=0.5; % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
+handles.LPF=0.1; % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
 
 % PST parameters
-handles.Phase_strength=2;  % PST  kernel Phase Strength
+handles.Phase_strength=5;  % PST  kernel Phase Strength
 handles.Warp_strength=30;  % PST Kernel Warp Strength
 
 % Thresholding parameters (for post processing)
@@ -57,10 +57,10 @@ else
 end
 
 % show the PST phase kernel gradient
-figure
-[D_PST_Kernel_x D_PST_Kernel_y]=gradient(PST_Kernel);
-mesh(sqrt(D_PST_Kernel_x.^2+D_PST_Kernel_y.^2))
-title('PST Kernel phase Gradient')
+% figure
+% [D_PST_Kernel_x D_PST_Kernel_y]=gradient(PST_Kernel);
+% mesh(sqrt(D_PST_Kernel_x.^2+D_PST_Kernel_y.^2))
+% title('PST Kernel phase Gradient')
 
 
 
