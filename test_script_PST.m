@@ -22,15 +22,15 @@ title('Original Image')
 Image_orig=double(Image_orig);
 
 % low-pass filtering (also called localization) parameter
-handles.LPF=0.5; % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
+handles.LPF=0.9810; % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
 
 % PST parameters
-handles.Phase_strength=5;  % PST  kernel Phase Strength
-handles.Warp_strength=30;  % PST Kernel Warp Strength
+handles.Phase_strength=13;  % PST  kernel Phase Strength
+handles.Warp_strength=24;  % PST Kernel Warp Strength
 
 % Thresholding parameters (for post processing)
-handles.Thresh_min=-0.004;      % minimum Threshold  (a number between 0 and -1)
-handles.Thresh_max=0.9;  % maximum Threshold  (a number between 0 and 1)
+handles.Thresh_min=-0.0236;      % minimum Threshold  (a number between 0 and -1)
+handles.Thresh_max=0.6074;  % maximum Threshold  (a number between 0 and 1)
 
 % choose to compute the analog or digital edge
 Morph_flag = 1 ; %  Morph_flag=0 to compute analog edge and Morph_flag=1 to compute digital edge.
