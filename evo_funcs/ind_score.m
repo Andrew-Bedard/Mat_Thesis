@@ -26,9 +26,11 @@ score = 0;
 for i = 1:length(Edge(:,1))
     for j = 1:length(Edge(1,:))
         if Manual_outline(i,j) == 1 && Edge(i,j) == 1
-            score = score + 1;
-        elseif Manual_outline(i,j) == 0 && Manual_outline(i,j) == 0
-            score = score + 0.25;
+            score = score + 0.1;
+        elseif Manual_outline(i,j) == 0 && Edge(i,j) == 0
+            score = score + 0.025;
+        elseif Manual_outline(i,j) == 0 && Edge(i,j) ==1
+            score = score - 0.05;
         end
     end
 end

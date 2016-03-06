@@ -27,3 +27,14 @@ score_vec = zeros(1,indvs);
 for i = 1:indvs
     score_vec(i) = ind_score(population(i,:), Image_orig, BW3);
 end;
+
+%Number of individuals in tournament
+tour_num = 40;
+
+%Tournament selection
+
+tourn_winners = tourn(score_vec,tour_num);
+
+%Crossover for the creation of Children
+
+children = crossover(population, tourn_winners);
