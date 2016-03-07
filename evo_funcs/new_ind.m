@@ -15,7 +15,7 @@ for i = 1:number_of_individuals
     LPF = rand;
     Phase_Strength = randi(100,1);
     Warp_Strength = randi(100,1);
-    Thresh_min = -1*rand;
+    Thresh_min = -1*rand/100;
     Thresh_max = rand;
     
     dummy_array(i,:) = [LPF, Phase_Strength, Warp_Strength, Thresh_min, Thresh_max];

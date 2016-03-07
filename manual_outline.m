@@ -2,8 +2,11 @@
 %Allows one to select outline of image and output it as a collection of
 %coordinates
 
-I = imread('Fox_late-gastrula2.jpg');
-I = rgb2gray(I);
+I = imread('Vas1_mid-gastrula.jpg');
+try
+    I=rgb2gray(I);
+catch
+end
 figure, imshow(I)
 BW = roipoly(I);
 
