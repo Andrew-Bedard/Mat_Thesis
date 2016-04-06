@@ -2,7 +2,7 @@
 %Allows one to select outline of image and output it as a collection of
 %coordinates
 
-I = imread('Vas1_mid-gastrula.jpg');
+I = imread('Exd_gastrula.jpg');
 try
     I=rgb2gray(I);
 catch

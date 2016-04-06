@@ -1,11 +1,13 @@
 % taken from http://www.mathworks.com/help/images/examples/detecting-a-cell-using-image-segmentation.html?prodcode=IP
 
-strucforsomereason = load('C:\Users\Andy\Documents\School\Thesis\Mat_Thesis\Blast_outline\edge_test_1.mat');
-BWs = strucforsomereason.Edge;
+% strucforsomereason = load('C:\Users\Andy\Documents\School\Thesis\Mat_Thesis\Blast_outline\edge_test_1.mat');
+% BWs = strucforsomereason.Edge;
+
+BWs = Edge;
 
 % Dilate the Image
 
-se = strel('disk', 3, 8);
+se = strel('disk', 1, 8);
 
 BWsdil = imdilate(BWs, se);
 figure, imshow(BWsdil), title('dilated gradient mask');
@@ -24,15 +26,14 @@ title('binary image with filled holes');
 
 %Smoothen the Object
 
-seD = strel('disk', 2, 8);
+seD = strel('disk', 1, 8);
 BWfinal = imerode(BWdfill,seD);
 BWfinal = imerode(BWfinal,seD);
-%BWfinal = imerode(BWfinal,seD);
 figure, imshow(BWfinal), title('segmented image');
 
 %Show outline over origional image
 
-Image_orig=imread('Vas1_mid-gastrula.jpg');
+Image_orig=imread('Exd_gastrula.jpg');
 
 BWoutline = bwperim(BWfinal);
 Segout = Image_orig;

@@ -5,7 +5,7 @@ clc  % clear screen
 %close all   % close all figures
 
 % import original image
-Image_orig=imread('Vas1_mid-gastrula.jpg');
+Image_orig=imread('Exd_gastrula.jpg');
 
 % if image is a color image, convert it to grayscale
 try
@@ -22,15 +22,15 @@ title('Original Image')
 Image_orig=double(Image_orig);
 
 % low-pass filtering (also called localization) parameter
-handles.LPF=0.15; % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
+handles.LPF=0.0001; % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
 
 % PST parameters
-handles.Phase_strength=5;  % PST  kernel Phase Strength
-handles.Warp_strength=20;  % PST Kernel Warp Strength
+handles.Phase_strength=32;  % PST  kernel Phase Strength
+handles.Warp_strength=54;  % PST Kernel Warp Strength
 
 % Thresholding parameters (for post processing)
-handles.Thresh_min=-0.0031;      % minimum Threshold  (a number between 0 and -1)
-handles.Thresh_max=0.875;  % maximum Threshold  (a number between 0 and 1)
+handles.Thresh_min=-0.0083;      % minimum Threshold  (a number between 0 and -1)
+handles.Thresh_max=0.6736;  % maximum Threshold  (a number between 0 and 1)
 
 % choose to compute the analog or digital edge
 Morph_flag = 1 ; %  Morph_flag=0 to compute analog edge and Morph_flag=1 to compute digital edge.

@@ -1,10 +1,10 @@
 %Script for evolutionary algorithm to optimize parameters for PST
 
 % import original image
-Image_orig=imread('4_1single.tif');
+Image_orig=imread('Exd_gastrula.jpg');
 
 % import image of manual outline ( note, loads as BW3)
-load('4_1single_outline.mat');
+load('Exd_gastrula_manual.mat');
 
 % if image is a color image, convert it to grayscale
 try
@@ -21,7 +21,7 @@ indvs = 100;
 %Origional children to make the following loop a little easier
 children = new_ind(5);
 
-for k = 1:100
+for k = 1:20
 
     %Create population with indvs number of individuals
     population = new_ind(indvs);
@@ -53,3 +53,13 @@ for k = 1:100
     children = mutate(children,k);
     
 end
+
+% sort the scores in score vector
+win = sort(score_vec, 'descend');
+
+% find index of individual with highest score in score vector
+win_ind = find(score_vec == win(2));
+win_ind = win_ind(1);
+
+% Check what the output edge looks like
+[Edge] = evo_pst(population, win_ind, Image_orig);

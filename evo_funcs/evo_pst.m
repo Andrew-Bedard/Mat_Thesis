@@ -1,36 +1,23 @@
+function [Edge] = evo_pst(population, win_ind, Image_orig);
+
 % test script to test PST function
 
-clc  % clear screen
-%clear all  % clear all variables
-%close all   % close all figures
-
-% import original image
-Image_orig=imread('Vas1_mid-gastrula.jpg');
-
-% if image is a color image, convert it to grayscale
-try
-    Image_orig=rgb2gray(Image_orig);
-catch
-end
 
 %show the original image
 subplot(1,2,1)
 imshow(Image_orig)
 title('Original Image')
 
-% convert the grayscale image do a 2D double array
-Image_orig=double(Image_orig);
-
 % low-pass filtering (also called localization) parameter
-handles.LPF=children(2,1); % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
+handles.LPF=population(win_ind,1); % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
 
 % PST parameters
-handles.Phase_strength=children(2,2);  % PST  kernel Phase Strength
-handles.Warp_strength=children(2,3);  % PST Kernel Warp Strength
+handles.Phase_strength=population(win_ind,2);  % PST  kernel Phase Strength
+handles.Warp_strength=population(win_ind,3);  % PST Kernel Warp Strength
 
 % Thresholding parameters (for post processing)
-handles.Thresh_min=-children(2,4);      % minimum Threshold  (a number between 0 and -1)
-handles.Thresh_max=children(2,5);  % maximum Threshold  (a number between 0 and 1)
+handles.Thresh_min=-population(win_ind,4);      % minimum Threshold  (a number between 0 and -1)
+handles.Thresh_max=population(win_ind,5);  % maximum Threshold  (a number between 0 and 1)
 
 % choose to compute the analog or digital edge
 Morph_flag = 1 ; %  Morph_flag=0 to compute analog edge and Morph_flag=1 to compute digital edge.
