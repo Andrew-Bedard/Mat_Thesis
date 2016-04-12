@@ -7,15 +7,17 @@ BWs = Edge;
 
 % Dilate the Image
 
-se = strel('disk', 1, 8);
+se = strel('disk',3, 8);
 
 BWsdil = imdilate(BWs, se);
 figure, imshow(BWsdil), title('dilated gradient mask');
 
+BWnobord = BWsdil;
+
 %Remove Connected Objects on Border
 
-BWnobord = imclearborder(BWsdil, 4);
-figure, imshow(BWnobord), title('cleared border image');
+%BWnobord = imclearborder(BWsdil, 4);
+%figure, imshow(BWnobord), title('cleared border image');
 
 %Fill Interior Gaps (takes place step further than in source as the
 %exterior edge may cause the entire image to be filled
@@ -33,7 +35,7 @@ figure, imshow(BWfinal), title('segmented image');
 
 %Show outline over origional image
 
-Image_orig=imread('Exd_gastrula.jpg');
+Image_orig=imread('kahikai.jpg');
 
 BWoutline = bwperim(BWfinal);
 Segout = Image_orig;

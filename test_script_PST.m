@@ -5,7 +5,7 @@ clc  % clear screen
 %close all   % close all figures
 
 % import original image
-Image_orig=imread('Exd_gastrula.jpg');
+Image_orig=imread('Bmp2_4_Blast.jpg');
 
 % if image is a color image, convert it to grayscale
 try
@@ -22,11 +22,11 @@ title('Original Image')
 Image_orig=double(Image_orig);
 
 % low-pass filtering (also called localization) parameter
-handles.LPF=0.0001; % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
+handles.LPF=0.1; % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
 
 % PST parameters
-handles.Phase_strength=32;  % PST  kernel Phase Strength
-handles.Warp_strength=54;  % PST Kernel Warp Strength
+handles.Phase_strength=8;  % PST  kernel Phase Strength
+handles.Warp_strength=30;  % PST Kernel Warp Strength
 
 % Thresholding parameters (for post processing)
 handles.Thresh_min=-0.0083;      % minimum Threshold  (a number between 0 and -1)

@@ -1,4 +1,4 @@
-I = imread('Fox_late-gastrula2.jpg');
+I = imread('Exd_gastrula.jpg');
 I = rgb2gray(I);
 %figure, imshow(I), title('original image');
 [~, threshold] = edge(I, 'sobel');
