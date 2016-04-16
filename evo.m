@@ -1,10 +1,9 @@
 %Script for evolutionary algorithm to optimize parameters for PST
 
 % import original image
-Image_orig=imread('Exd_gastrula.jpg');
+I_name = ('Bmp2_4_early_gast');
 
-% import image of manual outline ( note, loads as BW3)
-load('Exd_gastrula_manual.mat');
+Image_orig=imread(sprintf('%s.jpg',I_name));
 
 % if image is a color image, convert it to grayscale
 try
@@ -15,13 +14,16 @@ end
 % convert the grayscale image do a 2D double array
 Image_orig=double(Image_orig);
 
+% import image of manual outline ( note, loads as BW3)
+load(sprintf('%s_mask.mat',I_name));
+
 %Number of individuals
 indvs = 100;
 
 %Origional children to make the following loop a little easier
 children = new_ind(5);
 
-for k = 1:20
+for k = 1:10
 
     %Create population with indvs number of individuals
     population = new_ind(indvs);
@@ -32,8 +34,9 @@ for k = 1:20
 
     %Calculate a score for each individual
     score_vec = zeros(1,indvs);
-
-    parfor i = 1:indvs
+    
+    %Maybe parfor to speed this sucker up
+    for i = 1:indvs
         score_vec(i) = ind_score(population(i,:), Image_orig, BW3);
     end;
 

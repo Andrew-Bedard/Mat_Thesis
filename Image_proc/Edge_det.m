@@ -1,8 +1,10 @@
-I = imread('Exd_gastrula.jpg');
+%Using standard methods to grab edges directly from in-situ
+
+I = imread('Bmp2_4_early_gast.jpg');
 I = rgb2gray(I);
 %figure, imshow(I), title('original image');
 [~, threshold] = edge(I, 'sobel');
-fudgeFactor = 0.9;
+fudgeFactor = 0.6;
 BWs = edge(I,'sobel',threshold * fudgeFactor);
 %figure, imshow(BWs), title('binary gradient mask');
 se90 = strel('line', 3, 90);
