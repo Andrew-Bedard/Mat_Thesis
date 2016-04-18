@@ -1,5 +1,7 @@
 %Script for evolutionary algorithm to optimize parameters for PST
 
+tic;
+
 % import original image
 I_name = ('Bmp2_4_early_gast');
 
@@ -17,13 +19,18 @@ Image_orig=double(Image_orig);
 % import image of manual outline ( note, loads as BW3)
 load(sprintf('%s_mask.mat',I_name));
 
+% Crop boundaries of manual outline image
+% for use in score function 
+%(to prevent them from affecting PST)
+BW3 = Im_crop(BW3,5);
+
 %Number of individuals
 indvs = 100;
 
 %Origional children to make the following loop a little easier
 children = new_ind(5);
 
-for k = 1:10
+for k = 1:500
 
     %Create population with indvs number of individuals
     population = new_ind(indvs);
@@ -36,7 +43,7 @@ for k = 1:10
     score_vec = zeros(1,indvs);
     
     %Maybe parfor to speed this sucker up
-    for i = 1:indvs
+    parfor i = 1:indvs
         score_vec(i) = ind_score(population(i,:), Image_orig, BW3);
     end;
 
@@ -66,3 +73,5 @@ win_ind = win_ind(1);
 
 % Check what the output edge looks like
 [Edge] = evo_pst(population, win_ind, Image_orig);
+
+toc;
