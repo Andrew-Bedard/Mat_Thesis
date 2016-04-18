@@ -30,7 +30,7 @@ indvs = 100;
 %Origional children to make the following loop a little easier
 children = new_ind(5);
 
-for k = 1:500
+for k = 1:20
 
     %Create population with indvs number of individuals
     population = new_ind(indvs);
