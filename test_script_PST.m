@@ -25,7 +25,7 @@ Image_orig=double(Image_orig);
 handles.LPF=0.1033; % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
 
 % PST parameters
-handles.Phase_strength=1.9982;  % PST  kernel Phase Strength
+handles.Phase_strength=15.9982;  % PST  kernel Phase Strength
 handles.Warp_strength=60.0019;  % PST Kernel Warp Strength
 
 % Thresholding parameters (for post processing)

@@ -22,7 +22,7 @@ Morph_flag = 1 ; %  Morph_flag=0 to compute analog edge and Morph_flag=1 to comp
 % Score for 
 score = 0;
 
-%Crop boundaries of Edge such that the edges that PST inevitably detect
+%Crop boundaries(by setting = 0) of Edge such that the edges that PST inevitably detect
 %near the boundaries of the origional image do not affec the score at all
 Edge = Im_crop(Edge,5);
 
