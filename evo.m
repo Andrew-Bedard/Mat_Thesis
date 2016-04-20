@@ -3,7 +3,7 @@
 tic;
 
 % import original image
-I_name = ('Bmp2_4_early_gast');
+I_name = ('Bmp2_4_Blast');
 
 Image_orig=imread(sprintf('%s.jpg',I_name));
 
@@ -30,7 +30,7 @@ indvs = 100;
 %Origional children to make the following loop a little easier
 children = new_ind(5);
 
-for k = 1:20
+for k = 1:100
 
     %Create population with indvs number of individuals
     population = new_ind(indvs);
@@ -68,7 +68,7 @@ end
 win = sort(score_vec, 'descend');
 
 % find index of individual with highest score in score vector
-win_ind = find(score_vec == win(2));
+win_ind = find(score_vec == win(1));
 win_ind = win_ind(1);
 
 % Check what the output edge looks like

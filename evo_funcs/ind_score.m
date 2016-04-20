@@ -24,22 +24,23 @@ score = 0;
 
 %Crop boundaries(by setting = 0) of Edge such that the edges that PST inevitably detect
 %near the boundaries of the origional image do not affec the score at all
+
 Edge = Im_crop(Edge,5);
-
-Edge = pst2edge(Edge);
-
-i = 1:length(Edge(:,1));
-j = 1:length(Edge(1,:));
+Edge = pst2edge(Edge,4);
+Edge = bwareafilt(Edge,1,'largest');
+Edge = pst2edge(Edge,4);
+Edge = bwareafilt(Edge,1,'largest');
+Edge = bwperim(Edge);
 
 %
 for i = 1:length(Edge(:,1))
     for j = 1:length(Edge(1,:))
         if Manual_outline(i,j) == 1 && Edge(i,j) == 1
             score = score + 0.2;
-        elseif Manual_outline(i,j) == 0 && Edge(i,j) == 0
-            score = score + 0.005;
+%         elseif Manual_outline(i,j) == 0 && Edge(i,j) == 0
+%             score = score + 0.005;
         elseif Manual_outline(i,j) == 0 && Edge(i,j) ==1
-            score = score - 0.025;
+            score = score - 0.05;
         end
     end
 end

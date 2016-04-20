@@ -4,9 +4,9 @@ function [Edge] = evo_pst(population, win_ind, Image_orig);
 
 
 %show the original image
-subplot(1,2,1)
-imshow(Image_orig)
-title('Original Image')
+% subplot(1,2,1)
+% imshow(Image_orig)
+% title('Original Image')
 
 % low-pass filtering (also called localization) parameter
 handles.LPF=population(win_ind,1); % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
@@ -25,6 +25,13 @@ Morph_flag = 1 ; %  Morph_flag=0 to compute analog edge and Morph_flag=1 to comp
 % Apply PST and find features (sharp transitions)
 [Edge PST_Kernel]= PST(Image_orig,handles,Morph_flag);
 
+Edge = Im_crop(Edge,5);
+Edge = pst2edge(Edge,4);
+Edge = bwareafilt(Edge,1,'largest');
+Edge = pst2edge(Edge,4);
+Edge = bwareafilt(Edge,1,'largest');
+Edge = bwperim(Edge);
+
 if Morph_flag ==0
     % show the detected features    
     subplot(1,2,2)
@@ -32,9 +39,9 @@ if Morph_flag ==0
     title('Detected features using PST')
    
 else
-    subplot(1,2,2)
-    imshow(Edge)
-    title('Detected features using PST')
+%     subplot(1,2,2)
+%     imshow(Edge)
+%     title('Detected features using PST')
     
     % overlay original image with detected features
     overlay = double(imoverlay(Image_orig, Edge/1000000, [1 0 0]));

@@ -5,7 +5,7 @@
 %close all   % close all figures
 
 % import original image
-Image_orig=imread('Bmp2_4_early_gast.jpg');
+Image_orig=imread('Bmp2_4_Blast.jpg');
 
 % if image is a color image, convert it to grayscale
 try
@@ -22,21 +22,28 @@ title('Original Image')
 Image_orig=double(Image_orig);
 
 % low-pass filtering (also called localization) parameter
-handles.LPF=0.1033; % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
+handles.LPF=0.2604; % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
 
 % PST parameters
-handles.Phase_strength=15.9982;  % PST  kernel Phase Strength
-handles.Warp_strength=60.0019;  % PST Kernel Warp Strength
+handles.Phase_strength=3;  % PST  kernel Phase Strength
+handles.Warp_strength=29;  % PST Kernel Warp Strength
 
 % Thresholding parameters (for post processing)
-handles.Thresh_min=-0.009;      % minimum Threshold  (a number between 0 and -1)
-handles.Thresh_max=0.4741;  % maximum Threshold  (a number between 0 and 1)
+handles.Thresh_min=-0.0088;      % minimum Threshold  (a number between 0 and -1)
+handles.Thresh_max=0.9289;  % maximum Threshold  (a number between 0 and 1)
 
 % choose to compute the analog or digital edge
 Morph_flag = 1 ; %  Morph_flag=0 to compute analog edge and Morph_flag=1 to compute digital edge.
 
 % Apply PST and find features (sharp transitions)
 [Edge, PST_Kernel]= PST(Image_orig,handles,Morph_flag);
+
+Edge = Im_crop(Edge,5);
+Edge = pst2edge(Edge,4);
+Edge = bwareafilt(Edge,1,'largest');
+Edge = pst2edge(Edge,4);
+Edge = bwareafilt(Edge,1,'largest');
+Edge = bwperim(Edge);
 
 if Morph_flag ==0
     % show the detected features    
@@ -45,9 +52,9 @@ if Morph_flag ==0
     title('Detected features using PST')
    
 else
-    subplot(1,2,2)
-    imshow(Edge)
-    title('Detected features using PST')
+%     subplot(1,2,2)
+%     imshow(Edge)
+%     title('Detected features using PST')
     
     % overlay original image with detected features
     overlay = double(imoverlay(Image_orig, Edge/1000000, [1 0 0]));
@@ -62,7 +69,14 @@ end
 % mesh(sqrt(D_PST_Kernel_x.^2+D_PST_Kernel_y.^2))
 % title('PST Kernel phase Gradient')
 
-
+% Edge = Im_crop(Edge,5);
+% Edge = pst2edge(Edge,4);
+% Edge = bwareafilt(Edge,1,'largest');
+% Edge = pst2edge(Edge,4);
+% Edge = bwareafilt(Edge,1,'largest');
+% Edge = bwperim(Edge);
+% figure();
+% imshow(Edge);
 
 
 

@@ -1,4 +1,4 @@
-function [ Edge_new ] = pst2edge( Edge )
+function [ Edge_new ] = pst2edge( Edge, dilation_size )
 %UNTITLED9 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -11,7 +11,7 @@ BWs = Edge;
 
 % Dilate the Image
 
-se = strel('disk',3, 8);
+se = strel('disk',dilation_size, 8);
 
 BWsdil = imdilate(BWs, se);
 % figure, imshow(BWsdil), title('dilated gradient mask');
@@ -32,7 +32,7 @@ BWdfill = imfill(BWnobord, 'holes');
 
 %Smoothen the Object
 
-seD = strel('disk', 1, 8);
+seD = strel('disk', 3, 8);
 BWfinal = imerode(BWdfill,seD);
 BWfinal = imerode(BWfinal,seD);
 
