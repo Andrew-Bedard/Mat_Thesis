@@ -24,7 +24,11 @@ score = 0;
 
 %Crop boundaries(by setting = 0) of Edge such that the edges that PST inevitably detect
 %near the boundaries of the origional image do not affec the score at all
-
+%pst2edge to remove noise and connect large objects
+%bwareafilt to remove all but the largest object
+%pst2edge again to ensure we end up with one large object
+%bwareafilt to remove and small artifacts that may have shown up
+%bwperim to only end up with outline of embryo
 Edge = Im_crop(Edge,5);
 Edge = pst2edge(Edge,4);
 Edge = bwareafilt(Edge,1,'largest');
