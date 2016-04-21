@@ -19,7 +19,7 @@ Morph_flag = 1 ; %  Morph_flag=0 to compute analog edge and Morph_flag=1 to comp
 % Apply PST and find features (sharp transitions)
 [Edge, ~]= PST(Image_orig,handles,Morph_flag);
 
-% Score for 
+% Score 
 score = 0;
 
 %Crop boundaries(by setting = 0) of Edge such that the edges that PST inevitably detect
@@ -34,21 +34,37 @@ Edge = pst2edge(Edge,4);
 Edge = bwareafilt(Edge,1,'largest');
 Edge = pst2edge(Edge,4);
 Edge = bwareafilt(Edge,1,'largest');
-Edge = bwperim(Edge);
+%Edge = bwperim(Edge);
 
+
+%This is a test!!!!!!!!!!!!!!!
+Manual_outline = imfill(Manual_outline,'holes');
+%!!!!!!!!!!!!!!!!!!!!
 %
+%This is the good stuff !!!!!!!!!!!!
+% for i = 1:length(Edge(:,1))
+%     for j = 1:length(Edge(1,:))
+%         if Manual_outline(i,j) == 1 && Edge(i,j) == 1
+%             score = score + 0.2;
+% %         elseif Manual_outline(i,j) == 0 && Edge(i,j) == 0
+% %             score = score + 0.005;
+%         elseif Manual_outline(i,j) == 0 && Edge(i,j) ==1
+%             score = score - 0.05;
+%         end
+%     end
+% end
+%!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 for i = 1:length(Edge(:,1))
     for j = 1:length(Edge(1,:))
-        if Manual_outline(i,j) == 1 && Edge(i,j) == 1
-            score = score + 0.2;
-%         elseif Manual_outline(i,j) == 0 && Edge(i,j) == 0
-%             score = score + 0.005;
-        elseif Manual_outline(i,j) == 0 && Edge(i,j) ==1
-            score = score - 0.05;
+        if Manual_outline(i,j) == 1 && Edge(i,j) == 0
+            score = score - 1;
+        elseif Edge(i,j) == 1 && Manual_outline(i,j) == 0
+            score = score - 1;
         end
     end
 end
-
 
 % overlay = double(imoverlay(Manual_outline, Edge/1000000, [1 0 0]));
 % figure

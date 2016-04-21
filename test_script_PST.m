@@ -5,7 +5,7 @@
 %close all   % close all figures
 
 % import original image
-Image_orig=imread('Bmp2_4_Blast.jpg');
+Image_orig=imread('chordin.jpg');
 
 % if image is a color image, convert it to grayscale
 try
@@ -13,10 +13,6 @@ try
 catch
 end
 
-%show the original image
-subplot(1,2,1)
-imshow(Image_orig)
-title('Original Image')
 
 % convert the grayscale image do a 2D double array
 Image_orig=double(Image_orig);
@@ -32,11 +28,8 @@ handles.Warp_strength=29;  % PST Kernel Warp Strength
 handles.Thresh_min=-0.0088;      % minimum Threshold  (a number between 0 and -1)
 handles.Thresh_max=0.9289;  % maximum Threshold  (a number between 0 and 1)
 
-% choose to compute the analog or digital edge
-Morph_flag = 1 ; %  Morph_flag=0 to compute analog edge and Morph_flag=1 to compute digital edge.
-
 % Apply PST and find features (sharp transitions)
-[Edge, PST_Kernel]= PST(Image_orig,handles,Morph_flag);
+[Edge, PST_Kernel]= PST(Image_orig,handles,1);
 
 Edge = Im_crop(Edge,5);
 Edge = pst2edge(Edge,4);
@@ -45,23 +38,18 @@ Edge = pst2edge(Edge,4);
 Edge = bwareafilt(Edge,1,'largest');
 Edge = bwperim(Edge);
 
-if Morph_flag ==0
-    % show the detected features    
-    subplot(1,2,2)
-    imshow(Edge/max(max(Edge))*3)
-    title('Detected features using PST')
-   
-else
-%     subplot(1,2,2)
-%     imshow(Edge)
-%     title('Detected features using PST')
+% Lazy smoothing
+dilated = imdilate(Edge,strel('disk',7));
+thinned = bwmorph(dilated,'thin',inf);
+Edge = thinned;
+
     
-    % overlay original image with detected features
-    overlay = double(imoverlay(Image_orig, Edge/1000000, [1 0 0]));
-    figure
-    imshow(overlay/max(max(max(overlay))));
-    title('Detected features using PST overlaid with original image')
-end
+% overlay original image with detected features
+overlay = double(imoverlay(Image_orig, Edge/1000000, [1 0 0]));
+figure
+imshow(overlay/max(max(max(overlay))));
+title('Detected features using PST overlaid with original image')
+
 
 % show the PST phase kernel gradient
 % figure

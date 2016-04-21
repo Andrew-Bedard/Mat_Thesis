@@ -68,7 +68,7 @@ end
 win = sort(score_vec, 'descend');
 
 % find index of individual with highest score in score vector
-win_ind = find(score_vec == win(1));
+win_ind = find(score_vec == win(2));
 win_ind = win_ind(1);
 
 % Check what the output edge looks like
