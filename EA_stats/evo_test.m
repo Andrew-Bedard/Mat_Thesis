@@ -1,5 +1,11 @@
 function [] = evo_test(I_name, indvs, generations, im_save_int)
 
+% Use this for debugging::::
+% I_name = 'Bmp2_4_Blast';
+% indvs = 100;
+% generations = 1;
+% im_save_int = 1;
+
 %I_name = the name of the image
 %indvs = the number of individuals total in the population for each
 %generation
@@ -31,8 +37,9 @@ load(sprintf('%s_mask.mat',I_name));
 BW3 = Im_crop(BW3,5);
 
 
-%Origional children to make the following loop a little easier
+%Origional children & parents to make the following loop a little easier
 children = new_ind(5);
+parents = new_ind(10);
 
 for k = 1:generations
     %Create population with indvs number of individuals
@@ -41,6 +48,10 @@ for k = 1:generations
     %Keep previously calculated children in population
     
     population(1:5,:) = children;
+    
+    %Keep previous generations parents!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
+    population(6:15,:) = parents;
 
     %Calculate a score for each individual
     score_vec = zeros(1,indvs);
@@ -64,6 +75,11 @@ for k = 1:generations
     %Mutation
 
     children = mutate(children,k);
+    
+    %Save tourn_winners into list called parents to add back into
+    %population
+    
+    parents = population(tourn_winners,:);
     
     if mod(k,im_save_int) == 0
         

@@ -2,7 +2,7 @@
 %Allows one to select outline of image and output it as a collection of
 %coordinates
 
-I_name = ('FoxD_1');
+I_name = ('smad4-likeega2');
 I = imread(sprintf('%s.jpg',I_name));
 try
     I=rgb2gray(I);
@@ -23,3 +23,4 @@ BW3 = imdilate(BW2,strel('disk',1));
 imshow(BW3);
 save(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/Binary_masks/%s_mask',I_name),'BW3');
 clear;
+close all;

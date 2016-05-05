@@ -3,6 +3,7 @@
 
 contents = dir('C:\Users\Andy\Documents\School\Thesis\Images\Kahikai\Images');
 for i = 1:numel(contents)
+%for i = 1:4
   filename = contents(i).name;
   
   % Open the file specified in filename, do your processing...
@@ -22,6 +23,6 @@ for i = 1:numel(contents)
       
       % Run EA and save images every im_save_int until generations number
       % of loops
-      evo_test(name,100,250,5);
+      evo_test(name,100,100,5);
   end
 end
