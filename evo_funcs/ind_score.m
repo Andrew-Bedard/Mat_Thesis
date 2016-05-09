@@ -66,10 +66,6 @@ for i = 1:length(Edge(:,1))
     end
 end
 
-% overlay = double(imoverlay(Manual_outline, Edge/1000000, [1 0 0]));
-% figure
-% imshow(overlay);
-% title('Detected features using PST overlaid with manual outline')
 
 out_score = score;
 
