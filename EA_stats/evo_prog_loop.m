@@ -1,9 +1,11 @@
 %Performs EA on all images in set directory, and saves edges as binary
-%image after set number of iterations
+%image after set number of iterations, saves parameters of fittest
+%individual in .mat file called winner, where the last parameter is the
+%final score.
 
 contents = dir('C:\Users\Andy\Documents\School\Thesis\Images\Kahikai\Images');
 for i = 1:numel(contents)
-%for i = 1:4
+%for i = 1:3
   filename = contents(i).name;
   
   % Open the file specified in filename, do your processing...
@@ -23,6 +25,10 @@ for i = 1:numel(contents)
       
       % Run EA and save images every im_save_int until generations number
       % of loops
-      evo_test(name,100,100,5);
+      winner = evo_test(name,100,30,1);
+      
+      %Save parameters of fittest solution
+      save(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/EA_prog/%s/fittest_ind',name),'winner');
   end
 end
+

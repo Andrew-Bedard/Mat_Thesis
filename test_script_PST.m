@@ -5,7 +5,7 @@
 %close all   % close all figures
 
 % import original image
-Image_orig=imread('chordin.jpg');
+Image_orig=imread('Nanos2ega2.jpg');
 
 % if image is a color image, convert it to grayscale
 try
@@ -18,15 +18,15 @@ end
 Image_orig=double(Image_orig);
 
 % low-pass filtering (also called localization) parameter
-handles.LPF=0.2604; % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
+handles.LPF=0.117; % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
 
 % PST parameters
-handles.Phase_strength=3;  % PST  kernel Phase Strength
-handles.Warp_strength=29;  % PST Kernel Warp Strength
+handles.Phase_strength=32;  % PST  kernel Phase Strength
+handles.Warp_strength=70;  % PST Kernel Warp Strength
 
 % Thresholding parameters (for post processing)
-handles.Thresh_min=-0.0088;      % minimum Threshold  (a number between 0 and -1)
-handles.Thresh_max=0.9289;  % maximum Threshold  (a number between 0 and 1)
+handles.Thresh_min=-0.0057;      % minimum Threshold  (a number between 0 and -1)
+handles.Thresh_max=0.7610;  % maximum Threshold  (a number between 0 and 1)
 
 % Apply PST and find features (sharp transitions)
 [Edge, PST_Kernel]= PST(Image_orig,handles,1);

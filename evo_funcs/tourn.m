@@ -18,7 +18,7 @@ tourn_winners = zeros((Tourn_num/4),1);
 dummy_counter = 1;
 
 for i = 1:2:Tourn_num/2
-    if Ind(rand_list(i)) >= Ind(rand_list(i+1))
+    if Score_vec(Ind(rand_list(i))) >= Score_vec(Ind(rand_list(i+1)))
         tourn_winners(dummy_counter) = Ind(rand_list(i));
     else
         tourn_winners(dummy_counter) = Ind(rand_list(i+1));

@@ -1,4 +1,4 @@
-function [] = evo_test(I_name, indvs, generations, im_save_int)
+function [best_ind] = evo_test(I_name, indvs, generations, im_save_int)
 
 % Use this for debugging::::
 % I_name = 'Bmp2_4_Blast';
@@ -41,7 +41,19 @@ BW3 = Im_crop(BW3,5);
 children = new_ind(5);
 parents = new_ind(10);
 
+%Create origional fittest individual, where columns 1:5 are parameters for
+%the PST, and column 6 is its fitness score.
+best_ind = zeros(1,6);
+best_ind(6) = -9999;
+
+%Loop break counter
+
+loop_break_count = 0;
+
 for k = 1:generations
+    
+    loop_break_count = loop_break_count + 1;
+    
     %Create population with indvs number of individuals
     population = new_ind(indvs);
     
@@ -81,20 +93,37 @@ for k = 1:generations
     
     parents = population(tourn_winners,:);
     
+    % sort the scores in score vector
+    win = sort(score_vec, 'descend');
+
+    % find index of individual with highest score in score vector
+    win_ind = find(score_vec == win(1));
+    win_ind = win_ind(1);
+    
+    %Save best winning individuals score and properties thus far
+    
+    if win(1) > best_ind(6)
+        best_ind(6) = win(1);
+        best_ind(1:5) = population(win_ind,:);
+        loop_break_count = 0;
+    end
+       
+    sprintf('best score: %d',best_ind(6))
+    
     if mod(k,im_save_int) == 0
         
-        % sort the scores in score vector
-        win = sort(score_vec, 'descend');
-
-        % find index of individual with highest score in score vector
-        win_ind = find(score_vec == win(2));
-        win_ind = win_ind(1);
-
         % Check what the output edge looks like
         % Also saves jpg of edge over image
         [Edge,imtest] = evo_pst_test(population, win_ind, Image_orig, I_name, k);
         
         %save(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/EA_prog/%s/%d_gens',I_name,k),'Edge');
+    end
+    
+    % If loop break counter reaches N, there have been no improvements to
+    % the fittest individual after N loops, break function
+    
+    if loop_break_count >= 5
+        break
     end
     
 end
