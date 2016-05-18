@@ -2,6 +2,11 @@ function out_score = ind_score(Ind_vec, Image_orig, Manual_outline)
 %IND_SCORE Summary of this function goes here
 %   Uses PST to evaulate each individual and assign a score
 
+
+%%%%%%TESTING FRANGI FILTER%%%%%%%%
+
+%Image_orig=FrangiFilter2D(Image_orig);
+
 % low-pass filtering (also called localization) parameter
 handles.LPF=Ind_vec(1); % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
 
@@ -41,7 +46,7 @@ Edge = bwareafilt(Edge,1,'largest');
 Manual_outline = imfill(Manual_outline,'holes');
 %!!!!!!!!!!!!!!!!!!!!
 %
-%This is the good stuff !!!!!!!!!!!!
+% !!!!!!!!!!!!
 % for i = 1:length(Edge(:,1))
 %     for j = 1:length(Edge(1,:))
 %         if Manual_outline(i,j) == 1 && Edge(i,j) == 1

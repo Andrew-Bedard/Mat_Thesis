@@ -1,6 +1,13 @@
-function [Edge, imtest] = evo_pst_test(population, win_ind, Image_orig,I_name,k);
+function [Edge, imtest] = evo_pst_test(population, win_ind, Image_orig,I_name,k,bdry);
 
-%
+% Population = array of all individuals with their associated parameters
+% win_ind = fittest individual
+% Image_orig = original image
+% I_name = name of image
+% k = current generation ( used for naming only)
+% bdry = inner or outer boundary, for file selection and naming
+
+
 
 
 
@@ -47,7 +54,7 @@ else
     imtest = imshow(overlay/max(max(max(overlay))));
     title('Detected features using PST overlaid with original image')
     % Save image as jpg and close figure window
-    saveas(imtest,sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/EA_prog/%s/%d_gens',I_name,k),'jpg');
+    saveas(imtest,sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/EA_prog/%s/%s/%d_gens',bdry,I_name,k),'jpg');
     close figure 1
 end
 

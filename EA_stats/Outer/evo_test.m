@@ -1,4 +1,4 @@
-function [best_ind] = evo_test(I_name, indvs, generations, im_save_int)
+function [best_ind, best_scores] = evo_test(I_name, indvs, generations, im_save_int,bdry)
 
 % Use this for debugging::::
 % I_name = 'Bmp2_4_Blast';
@@ -28,8 +28,9 @@ end
 % convert the grayscale image do a 2D double array
 Image_orig=double(Image_orig);
 
+
 % import image of manual outline ( note, loads as BW3)
-load(sprintf('%s_mask.mat',I_name));
+load(sprintf('%s_mask_%s.mat',I_name,bdry));
 
 % Crop boundaries of manual outline image
 % for use in score function 
@@ -47,11 +48,14 @@ best_ind = zeros(1,6);
 best_ind(6) = -9999;
 
 %Loop break counter
-
 loop_break_count = 0;
+
+best_scores = zeros(generations,1);
+
 
 for k = 1:generations
     
+    %Counter for stopping conditions
     loop_break_count = loop_break_count + 1;
     
     %Create population with indvs number of individuals
@@ -110,13 +114,15 @@ for k = 1:generations
        
     sprintf('best score: %d',best_ind(6))
     
+    best_scores(k) = best_ind(6);
+    
     if mod(k,im_save_int) == 0
         
         % Check what the output edge looks like
         % Also saves jpg of edge over image
-        [Edge,imtest] = evo_pst_test(population, win_ind, Image_orig, I_name, k);
+        [Edge,imtest] = evo_pst_test(population, win_ind, Image_orig, I_name, k, bdry);
         
-        %save(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/EA_prog/%s/%d_gens',I_name,k),'Edge');
+        
     end
     
     % If loop break counter reaches N, there have been no improvements to

@@ -2,6 +2,11 @@
 %Allows one to select outline of image and output it as a collection of
 %coordinates
 
+%%%%%%% Must specify Inner or Outer to save mask as endoderm or ectoderm
+%%%%%%% boundary respectively to save images in correct directory
+
+bound = 'Inner';
+
 contents = dir('C:\Users\Andy\Documents\School\Thesis\Images\Kahikai\Images');
 for i = 1:numel(contents)
     filename = contents(i).name;
@@ -10,7 +15,7 @@ for i = 1:numel(contents)
     [~, I_name] = fileparts(filename);
     
      %Make sure we are only trying to find boundary for image files
-     if exist(sprintf('%s.jpg',I_name),'file') ~= 0 %&& exist(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/Binary_masks/%s_mask.mat',I_name),'file') == 0
+     if exist(sprintf('%s.jpg',I_name),'file') ~= 0 && exist(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/Binary_masks/%s/%s_mask.mat',bound,I_name),'file') == 0
 
         I = imread(sprintf('%s.jpg',I_name));
         try
@@ -22,6 +27,7 @@ for i = 1:numel(contents)
 
         prompt = 'press enter once mask is saved ';
         input(prompt,'s');
+        close all;
         %Now requires the selection of the inside of the polygon to create a mask
         %with, then use the following: 
         BW2 = bwperim(BW,8); 
@@ -30,7 +36,8 @@ for i = 1:numel(contents)
         %not going to be perfect
 
         imshow(BW3)
-        save(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/Binary_masks/%s_mask',I_name),'BW3');
+        pause(2)
+        save(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/Binary_masks/%s/%s_mask',bound,I_name),'BW3');
         clear BW3;
         close all;
 
