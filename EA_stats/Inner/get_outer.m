@@ -1,5 +1,6 @@
 function [Out_Edge] = get_outer(I_name)
 
+%Comes up with outer edge based on pre-calculated optimal parameters
 
 % import original image
 Image_orig=imread(sprintf('%s.jpg',I_name));
