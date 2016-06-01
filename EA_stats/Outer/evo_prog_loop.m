@@ -16,8 +16,8 @@ bdry = 'Outer';
 err_list = zeros(30, numel(contents));
 
 
-%for i = 1:numel(contents)
-for i = 1:3
+for i = 1:numel(contents)
+% for i = 1:3
   filename = contents(i).name;
   
   % Open the file specified in filename, do your processing...

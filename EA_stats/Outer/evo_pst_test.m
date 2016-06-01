@@ -38,7 +38,13 @@ Edge = bwperim(Edge);
 % Lazy smoothing
 dilated = imdilate(Edge,strel('disk',7));
 thinned = bwmorph(dilated,'thin',inf);
-Edge = thinned;
+
+Edge = imfill(thinned,'holes');
+
+%Added canny edge detection for improved smoothing!!!!!!
+Edge = edge(Edge,'canny',[],10);
+
+
 
 if Morph_flag ==0
     % show the detected features    

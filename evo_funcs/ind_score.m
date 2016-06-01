@@ -39,7 +39,18 @@ Edge = pst2edge(Edge,4);
 Edge = bwareafilt(Edge,1,'largest');
 Edge = pst2edge(Edge,4);
 Edge = bwareafilt(Edge,1,'largest');
-%Edge = bwperim(Edge);
+Edge = bwperim(Edge);
+
+%Keeping filter method consistant with what is used for Edge output
+dilated = imdilate(Edge,strel('disk',7));
+thinned = bwmorph(dilated,'thin',inf);
+
+Edge = imfill(thinned,'holes');
+
+%Added canny edge detection for improved smoothing!!!!!!
+Edge = edge(Edge,'canny',[],10);
+
+Edge = imfill(Edge,'holes');
 
 
 %This is a test!!!!!!!!!!!!!!!

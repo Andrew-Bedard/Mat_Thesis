@@ -7,7 +7,7 @@ tic;
 indvs = 100;
 generations = 3;
 % im_save_int = 1;
-bdry = 'Inner';
+bdry = 'Outer';
 
 %I_name = the name of the image
 %indvs = the number of individuals total in the population for each
