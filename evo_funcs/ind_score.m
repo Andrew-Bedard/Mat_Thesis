@@ -3,10 +3,6 @@ function out_score = ind_score(Ind_vec, Image_orig, Manual_outline)
 %   Uses PST to evaulate each individual and assign a score
 
 
-%%%%%%TESTING FRANGI FILTER%%%%%%%%
-
-%Image_orig=FrangiFilter2D(Image_orig);
-
 % low-pass filtering (also called localization) parameter
 handles.LPF=Ind_vec(1); % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
 
@@ -34,7 +30,7 @@ score = 0;
 %pst2edge again to ensure we end up with one large object
 %bwareafilt to remove and small artifacts that may have shown up
 %bwperim to only end up with outline of embryo
-Edge = Im_crop(Edge,5);
+Edge = Image_crop(Edge,5);
 Edge = pst2edge(Edge,4);
 Edge = bwareafilt(Edge,1,'largest');
 Edge = pst2edge(Edge,4);
@@ -48,9 +44,9 @@ thinned = bwmorph(dilated,'thin',inf);
 Edge = imfill(thinned,'holes');
 
 %Added canny edge detection for improved smoothing!!!!!!
-Edge = edge(Edge,'canny',[],10);
-
-Edge = imfill(Edge,'holes');
+% Edge = edge(Edge,'canny',[],10);
+% 
+% Edge = imfill(Edge,'holes');
 
 
 %This is a test!!!!!!!!!!!!!!!
