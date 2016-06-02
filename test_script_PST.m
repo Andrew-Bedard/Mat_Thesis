@@ -33,12 +33,12 @@ handles.Thresh_max=0.7104;  % maximum Threshold  (a number between 0 and 1)
 % Apply PST and find features (sharp transitions)
 [Edge, ~]= PST(Image_orig,handles,1);
 
-Edge = Im_crop(Edge,5);
+%Edge = Image_crop(Edge,5);
 Edge = pst2edge(Edge,4);
-Edge = bwareafilt(Edge,1,'largest');
-Edge = pst2edge(Edge,4);
-Edge = bwareafilt(Edge,1,'largest');
-Edge = bwperim(Edge);
+% Edge = bwareafilt(Edge,1,'largest');
+% Edge = pst2edge(Edge,4);
+% Edge = bwareafilt(Edge,1,'largest');
+%Edge = bwperim(Edge);
 
 % Lazy smoothing
 dilated = imdilate(Edge,strel('disk',7));

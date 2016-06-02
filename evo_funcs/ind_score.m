@@ -31,7 +31,7 @@ score = 0;
 %bwareafilt to remove and small artifacts that may have shown up
 %bwperim to only end up with outline of embryo
 Edge = Image_crop(Edge,5);
-Edge = pst2edge(Edge,4);
+Edge = pst2edge(Edge,3);
 Edge = bwareafilt(Edge,1,'largest');
 Edge = pst2edge(Edge,4);
 Edge = bwareafilt(Edge,1,'largest');

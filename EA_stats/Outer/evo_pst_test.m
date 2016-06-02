@@ -28,7 +28,7 @@ Morph_flag = 1 ; %  Morph_flag=0 to compute analog edge and Morph_flag=1 to comp
 % Apply PST and find features (sharp transitions)
 [Edge , ~]= PST(Image_orig,handles,Morph_flag);
 
-Edge = Im_crop(Edge,5);
+Edge = Image_crop(Edge,5);
 Edge = pst2edge(Edge,4);
 Edge = bwareafilt(Edge,1,'largest');
 Edge = pst2edge(Edge,4);

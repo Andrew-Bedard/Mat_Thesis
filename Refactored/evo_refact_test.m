@@ -7,6 +7,7 @@ generations = 1;
 im_save_int = 0;
 children_number = 5;
 parents_number = 10;
+boundary_name = 'Outer';
 
 %I_name = the name of the image
 %indvs = the number of individuals total in the population for each
@@ -41,7 +42,7 @@ for k = 1:generations
     loop_break_count = loop_break_count + 1;
     
     %Create population with indvs number of individuals
-    population = new_ind(indvs);
+    population = new_individual(indvs);
     
     %Keep previously calculated children in population
     
@@ -56,7 +57,7 @@ for k = 1:generations
     
     %Maybe parfor to speed this sucker up
     parfor i = 1:indvs
-        score_vec(i) = ind_score(population(i,:), Image_orig, boundary);
+        score_vec(i) = individual_fitness(population(i,:), Image_orig, boundary);
     end;
 
     %Number of individuals in tournament
@@ -102,7 +103,7 @@ for k = 1:generations
         
         % Check what the output edge looks like
         % Also saves jpg of edge over image
-        [Edge,imtest] = evo_pst_test(population, win_ind, Image_orig, I_name, k, boundary_name);
+        [Edge,imtest] = evo_pst_test(population, win_ind, Image_orig, Image_name, k, boundary_name);
         
         
     end
