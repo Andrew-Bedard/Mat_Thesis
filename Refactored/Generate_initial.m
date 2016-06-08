@@ -1,5 +1,5 @@
-function [ children, parents, fittest_individual, best_scores] = ...
-    Generate_initial(children_number, parents_number, generations)
+function [ children, parents, fittest_individual, best_scores, score_vec] = ...
+    Generate_initial(children_number, parents_number, generations, population_size)
 %Generate_initial: Creates initial variables needed to start EA loop.
 %children= array of children_number children with random parameters
 %parents = array of parents_number parents with random parameters
@@ -20,6 +20,9 @@ fittest_individual(6) = -99999;
 
 %List of best scores
 best_scores = zeros(generations,1);
+
+%Score vector
+score_vec = zeros(1,population_size);
 
 end
 

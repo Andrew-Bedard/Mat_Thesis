@@ -1,11 +1,20 @@
-function [fittest_individual, loop_break_counter] = ...
-    find_fittest(population, score_vec, loop_break_counter, fittest_individual, disp_output)
+function [fittest_individual, loop_break_counter] = find_fittest(population, children,...
+    children_scores, score_vec, loop_break_counter, fittest_individual, disp_output)
 
-%FIND_FITTEST: takes entire population, score vector, loop break counter
-%and fittest individual up until this point. If current generations fittest
+%FIND_FITTEST: takes entire population including new children, score vector,
+%loop break counter and fittest individual up until this point. If current generations fittest
 %individual has a fitness greater than that of the previous, it replaces
 %the old one and resets the loop break counter, otherwise the fittest
 %individual and loop break counter remain unchanged. 
+
+
+% add children to population
+
+population = [population; children];
+
+% add children_scores to score_vec
+
+score_vec = [score_vec children_scores];
 
 % sort the scores in score vector
 sorted_scores = sort(score_vec, 'descend');

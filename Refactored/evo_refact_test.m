@@ -1,12 +1,15 @@
 %function [fittest_individual, best_scores] = evo_refact_test(Image_name, indvs, generations, im_save_int,boundary_name)
-
+tic;
 % Use this for debugging::::
 Image_name = 'Bmp2_4_Blast';
 population_size = 100;
-generations = 25;
+generations = 10;
 im_save_int = 3;
 children_number = 5;
 parents_number = 10;
+%Number of individuals in tournament
+tourn_size = 40;
+
 boundary_name = 'Outer';
 
 %I_name = the name of the image
@@ -27,8 +30,8 @@ boundary = Import_manual(Image_name, boundary_name, 5);
 
 %Create initial values for parents, children, fittest individual, and
 %best_scores
-[ children, parents, fittest_individual, best_scores] = ...
-    Generate_initial(children_number, parents_number, generations);
+[ children, parents, fittest_individual, best_scores, score_vec] = ...
+    Generate_initial(children_number, parents_number, generations, population_size);
 
 
 %Loop break counter
@@ -44,20 +47,19 @@ for current_generation = 1:generations
     %Create new population for calculation, saving the parents and children
     %from previous generation
     
-    [population, score_vec] = Next_gnereation_population(population_size, children, ...
-        parents, children_number, parents_number);
+    [population, score_vec] = Next_generation_population(population_size, children,...
+        parents, children_scores, children_number, parents_number, current_generation);
     
     %Calculate the fitness score for each individual
     parfor i = 1:population_size
-        score_vec(i) = individual_fitness(population(i,:), Image_orig, boundary);
+        if score_vec(i) ==0
+            score_vec(i) = individual_fitness(population(i,:), Image_orig, boundary);
+        end
     end;
-
-    %Number of individuals in tournament
-    tour_num = 40;
 
     %Tournament selection
 
-    tourn_winners = tournament(score_vec,tour_num);
+    tourn_winners = tournament(score_vec,tourn_size);
 
     %Crossover for the creation of Children
 
@@ -66,6 +68,13 @@ for current_generation = 1:generations
     %Mutation
 
     children = mutate(children,current_generation);
+    
+    %Calculate fitness for newly created Children    
+    children_scores = zeros(1, children_number);
+    
+    parfor i = 1:children_number
+        children_scores(i) = individual_fitness(children(i,:), Image_orig, boundary);
+    end;
     
     %Save tourn_winners into list called parents to add back into
     %population
@@ -76,8 +85,8 @@ for current_generation = 1:generations
     % current fittest individual has greater fitness than previous
     % generation. Output current score.
     
-    [fittest_individual, loop_break_counter] = find_fittest(population, score_vec ...
-        , loop_break_counter, fittest_individual, false);
+    [fittest_individual, loop_break_counter] = find_fittest(population, children,...
+        children_scores, score_vec, loop_break_counter, fittest_individual, false);
     
     best_scores(current_generation) = fittest_individual(6);
     
@@ -95,11 +104,12 @@ for current_generation = 1:generations
     % If loop break counter reaches N, there have been no improvements to
     % the fittest individual after N loops, break function
     
-    if loop_break_counter >= 5
+    if loop_break_counter >= 10
         break
     end
     
 end
 
+toc;
 [Edge, Edge_overlay] = Edge_OutputAndSave(fittest_individual,...
           Image_orig, Image_name, current_generation, boundary_name, false);
