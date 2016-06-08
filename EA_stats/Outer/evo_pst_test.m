@@ -1,4 +1,4 @@
-function [Edge, imtest] = evo_pst_test(population, win_ind, Image_orig,I_name,k,bdry);
+function [Edge, imtest] = evo_pst_test(population, win_ind, Image_orig,I_name,k,bdry, imsave)
 
 % Population = array of all individuals with their associated parameters
 % win_ind = fittest individual
@@ -6,9 +6,7 @@ function [Edge, imtest] = evo_pst_test(population, win_ind, Image_orig,I_name,k,
 % I_name = name of image
 % k = current generation ( used for naming only)
 % bdry = inner or outer boundary, for file selection and naming
-
-
-
+%imsave= save image, boolean
 
 
 % low-pass filtering (also called localization) parameter
@@ -28,12 +26,8 @@ Morph_flag = 1 ; %  Morph_flag=0 to compute analog edge and Morph_flag=1 to comp
 % Apply PST and find features (sharp transitions)
 [Edge , ~]= PST(Image_orig,handles,Morph_flag);
 
-Edge = Image_crop(Edge,5);
+
 Edge = pst2edge(Edge,4);
-Edge = bwareafilt(Edge,1,'largest');
-Edge = pst2edge(Edge,4);
-Edge = bwareafilt(Edge,1,'largest');
-Edge = bwperim(Edge);
 
 % Lazy smoothing
 dilated = imdilate(Edge,strel('disk',7));
@@ -60,7 +54,9 @@ else
     imtest = imshow(overlay/max(max(max(overlay))));
     title('Detected features using PST overlaid with original image')
     % Save image as jpg and close figure window
-    saveas(imtest,sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/EA_prog/%s/%s/%d_gens',bdry,I_name,k),'jpg');
+    if imsave == true
+        saveas(imtest,sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/EA_prog/%s/%s/%d_gens',bdry,I_name,k),'jpg');
+    end
     close figure 1
 end
 

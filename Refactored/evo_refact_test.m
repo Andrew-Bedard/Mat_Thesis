@@ -2,9 +2,9 @@
 
 % Use this for debugging::::
 Image_name = 'Bmp2_4_Blast';
-indvs = 100;
-generations = 1;
-im_save_int = 0;
+population_size = 100;
+generations = 25;
+im_save_int = 3;
 children_number = 5;
 parents_number = 10;
 boundary_name = 'Outer';
@@ -32,31 +32,23 @@ boundary = Import_manual(Image_name, boundary_name, 5);
 
 
 %Loop break counter
-loop_break_count = 0;
+loop_break_counter = 0;
 
 
 
-for k = 1:generations
+for current_generation = 1:generations
     
     %Counter for stopping conditions
-    loop_break_count = loop_break_count + 1;
+    loop_break_counter = loop_break_counter + 1;
     
-    %Create population with indvs number of individuals
-    population = new_individual(indvs);
+    %Create new population for calculation, saving the parents and children
+    %from previous generation
     
-    %Keep previously calculated children in population
+    [population, score_vec] = Next_gnereation_population(population_size, children, ...
+        parents, children_number, parents_number);
     
-    population(1:5,:) = children;
-    
-    %Keep previous generations parents!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    
-    population(6:15,:) = parents;
-
-    %Calculate a score for each individual
-    score_vec = zeros(1,indvs);
-    
-    %Maybe parfor to speed this sucker up
-    parfor i = 1:indvs
+    %Calculate the fitness score for each individual
+    parfor i = 1:population_size
         score_vec(i) = individual_fitness(population(i,:), Image_orig, boundary);
     end;
 
@@ -65,7 +57,7 @@ for k = 1:generations
 
     %Tournament selection
 
-    tourn_winners = tourn(score_vec,tour_num);
+    tourn_winners = tournament(score_vec,tour_num);
 
     %Crossover for the creation of Children
 
@@ -73,46 +65,41 @@ for k = 1:generations
 
     %Mutation
 
-    children = mutate(children,k);
+    children = mutate(children,current_generation);
     
     %Save tourn_winners into list called parents to add back into
     %population
     
     parents = population(tourn_winners,:);
     
-    % sort the scores in score vector
-    win = sort(score_vec, 'descend');
-
-    % find index of individual with highest score in score vector
-    win_ind = find(score_vec == win(1));
-    win_ind = win_ind(1);
+    % Sort scores and find fittest individual, reset loop_break_counter if
+    % current fittest individual has greater fitness than previous
+    % generation. Output current score.
     
-    %Save best winning individuals score and properties thus far
+    [fittest_individual, loop_break_counter] = find_fittest(population, score_vec ...
+        , loop_break_counter, fittest_individual, false);
     
-    if win(1) > fittest_individual(6)
-        fittest_individual(6) = win(1);
-        fittest_individual(1:5) = population(win_ind,:);
-        loop_break_count = 0;
-    end
-       
-    sprintf('best score: %d',fittest_individual(6))
+    best_scores(current_generation) = fittest_individual(6);
     
-    best_scores(k) = fittest_individual(6);
-    
-    if mod(k,im_save_int) == 0
+    %If our current generation is a multiple of image save interval,
+    %calculate edge and save (requires Save_bool of Image_orig to be set to
+    %true)
+    if mod(current_generation,im_save_int) == 0
         
-        % Check what the output edge looks like
-        % Also saves jpg of edge over image
-        [Edge,imtest] = evo_pst_test(population, win_ind, Image_orig, Image_name, k, boundary_name);
-        
-        
+        % Calculate image output and save based on Save_bool
+        [~, ~] = Edge_OutputAndSave(fittest_individual,...
+          Image_orig, Image_name, current_generation, boundary_name, false);
+      
     end
     
     % If loop break counter reaches N, there have been no improvements to
     % the fittest individual after N loops, break function
     
-    if loop_break_count >= 5
+    if loop_break_counter >= 5
         break
     end
     
 end
+
+[Edge, Edge_overlay] = Edge_OutputAndSave(fittest_individual,...
+          Image_orig, Image_name, current_generation, boundary_name, false);

@@ -1,5 +1,5 @@
 function Mutant_children = mutate( Children, Algo_depth )
-%MUTATE Summary of this function goes here
+%MUTATE 
 %   Basic mutation with added term to decrease mutation size as algorithm
 %   progresses
 
