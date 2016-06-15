@@ -1,5 +1,5 @@
 function [population, score_vec] = Next_generation_population(population_size, children, parents, ...
-    children_scores, children_number, parents_number, current_generation)
+    children_scores, children_number, parents_scores, parents_number, current_generation, boundary_name)
 
 %NEXT_GENERATION_POPULATION: from population_size, children, parents it
 %creates a new population for the next generations calculations, keeping
@@ -9,7 +9,7 @@ function [population, score_vec] = Next_generation_population(population_size, c
 if current_generation == 1
     
     %Create population with indvs number of individuals
-    population = new_individual(population_size);
+    population = new_individual(population_size, boundary_name);
     
     %Create empty vector for scores to be calculated
     
@@ -18,7 +18,7 @@ if current_generation == 1
 else
 
     %Create population with indvs number of individuals
-    population = new_individual(population_size);
+    population = new_individual(population_size, boundary_name);
 
     %Keep previously calculated children in population
 
@@ -26,12 +26,14 @@ else
 
     %Keep previous generations parents
 
-    population((children_number + 1):(children_number + parents_number),:) = parents;
+    %population((children_number + 1):(children_number + parents_number),:) = parents;
 
     %Keep calculated already calculated scores from previous generation
 
     score_vec = zeros(1,population_size);
 
     score_vec(1:children_number) = children_scores;
+    
+    %score_vec((children_number + 1) : (children_number + parents_number)) = parents_scores;
 
 end;

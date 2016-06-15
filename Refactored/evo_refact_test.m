@@ -1,115 +1,63 @@
 %function [fittest_individual, best_scores] = evo_refact_test(Image_name, indvs, generations, im_save_int,boundary_name)
 tic;
 % Use this for debugging::::
-Image_name = 'Bmp2_4_Blast';
+Image_name = '6_3single';
 population_size = 100;
-generations = 10;
-im_save_int = 3;
+generations = 30;
+im_save_int = 2;
 children_number = 5;
 parents_number = 10;
 %Number of individuals in tournament
 tourn_size = 40;
+loop_max = 5;
 
 boundary_name = 'Outer';
 
-%I_name = the name of the image
-%indvs = the number of individuals total in the population for each
-%generation
-%generations = the number of generations until loop terminates
-%im_save_int = the length of interval until next image is saved
 
-
-% import original image
+% import original image, convert to double greyscale
 
 Image_orig = Im_import(Image_name);
 
-
 % import cropped image of manual outline ( note, loads as boundary)
 
-boundary = Import_manual(Image_name, boundary_name, 5);
+boundary = Import_manual(Image_name, boundary_name);
 
-%Create initial values for parents, children, fittest individual, and
-%best_scores
-[ children, parents, fittest_individual, best_scores, score_vec] = ...
-    Generate_initial(children_number, parents_number, generations, population_size);
-
-
-%Loop break counter
-loop_break_counter = 0;
-
-
-
-for current_generation = 1:generations
-    
-    %Counter for stopping conditions
-    loop_break_counter = loop_break_counter + 1;
-    
-    %Create new population for calculation, saving the parents and children
-    %from previous generation
-    
-    [population, score_vec] = Next_generation_population(population_size, children,...
-        parents, children_scores, children_number, parents_number, current_generation);
-    
-    %Calculate the fitness score for each individual
-    parfor i = 1:population_size
-        if score_vec(i) ==0
-            score_vec(i) = individual_fitness(population(i,:), Image_orig, boundary);
-        end
-    end;
-
-    %Tournament selection
-
-    tourn_winners = tournament(score_vec,tourn_size);
-
-    %Crossover for the creation of Children
-
-    children = crossover(population, tourn_winners);
-
-    %Mutation
-
-    children = mutate(children,current_generation);
-    
-    %Calculate fitness for newly created Children    
-    children_scores = zeros(1, children_number);
-    
-    parfor i = 1:children_number
-        children_scores(i) = individual_fitness(children(i,:), Image_orig, boundary);
-    end;
-    
-    %Save tourn_winners into list called parents to add back into
-    %population
-    
-    parents = population(tourn_winners,:);
-    
-    % Sort scores and find fittest individual, reset loop_break_counter if
-    % current fittest individual has greater fitness than previous
-    % generation. Output current score.
-    
-    [fittest_individual, loop_break_counter] = find_fittest(population, children,...
-        children_scores, score_vec, loop_break_counter, fittest_individual, false);
-    
-    best_scores(current_generation) = fittest_individual(6);
-    
-    %If our current generation is a multiple of image save interval,
-    %calculate edge and save (requires Save_bool of Image_orig to be set to
-    %true)
-    if mod(current_generation,im_save_int) == 0
-        
-        % Calculate image output and save based on Save_bool
-        [~, ~] = Edge_OutputAndSave(fittest_individual,...
-          Image_orig, Image_name, current_generation, boundary_name, false);
-      
-    end
-    
-    % If loop break counter reaches N, there have been no improvements to
-    % the fittest individual after N loops, break function
-    
-    if loop_break_counter >= 10
-        break
-    end
-    
-end
+%EA loop for outer boundary
+[fittest_individual_outer, current_generation] = EA_loop(children_number,parents_number, ...
+    generations, loop_max, population_size, tourn_size, Image_orig, Image_name, ...
+    boundary, boundary_name, im_save_int);
 
 toc;
-[Edge, Edge_overlay] = Edge_OutputAndSave(fittest_individual,...
+%Take a look at what outer edge looks like, last parameter for saving, set
+%to false to supress output
+[Outer_Edge, Edge_overlay_Outer] = Edge_OutputAndSave_Outer(fittest_individual_outer,...
           Image_orig, Image_name, current_generation, boundary_name, false);
+      
+
+%EA loop for inner boundary
+
+boundary_name = 'Inner';
+% 
+boundary = Import_manual(Image_name, boundary_name);
+
+%im_save_int = 1;
+
+% [fittest_individual_inner, current_generation, population] = EA_loop_inner(children_number, parents_number, ...
+%     generations, loop_max, population_size, tourn_size, Image_orig, Image_name, ...
+%     boundary, boundary_name, im_save_int, Outer_Edge);
+% 
+% toc;
+% %Take a look at what inner edge looks like, last parameter for saving, set
+% %to false to supress output
+% [Inner_Edge, Edge_overlay_Inner] = Edge_OutputAndSave_Inner(fittest_individual_inner,...
+%     Outer_Edge, Image_orig, Image_name, current_generation, boundary_name, false);
+
+
+[Inner_Edge, Edge_overlay] = Edge_OutputAndSave_Inner_nonEA(fittest_individual_outer,...
+    Outer_Edge, Image_orig, Image_name, current_generation, boundary_name, false);
+
+Combined_Edge = Outer_Edge + Inner_Edge;
+overlay = double(imoverlay(Image_orig, Outer_Edge/1000000, [1 0 0]));
+overlay = imoverlay(overlay, Inner_Edge, [0 0 1]);
+figure
+Combined_overlay = imshow(overlay/max(max(max(overlay))));

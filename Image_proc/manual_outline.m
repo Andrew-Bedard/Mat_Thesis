@@ -37,7 +37,7 @@ for i = 1:numel(contents)
 
         imshow(BW3)
         pause(2)
-        save(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/Binary_masks/%s/%s_mask',bound,I_name),'BW3');
+        save(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/Binary_masks/%s/%s_mask_%s',bound,I_name,bound),'BW3');
         clear BW3;
         close all;
 

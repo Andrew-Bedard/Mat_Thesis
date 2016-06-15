@@ -1,4 +1,6 @@
 function fitness_score = individual_fitness(Individual_params, Image_orig, Manual_outline)
+%INDIVIDUAL_FITNESS: calculates the fitness score of each individual in the
+% population
 
 % low-pass filtering (also called localization) parameter
 handles.LPF=Individual_params(1); % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
@@ -17,16 +19,11 @@ Morph_flag = 1 ; %  Morph_flag=0 to compute analog edge and Morph_flag=1 to comp
 % Apply PST and find features (sharp transitions)
 [Edge, ~]= PST(Image_orig,handles,Morph_flag);
 
-%Crop boundaries, remove noise and select outer edge of object
+%Crop boundaries, remove noise, smooth and select outer edge of object
 
 Edge = pst2edge(Edge,3);
-
-%THIS MAY NEED TO GO INTO PST2EDGE OR ANOTHER FUNCTION
-
-dilated = imdilate(Edge,strel('disk',7));
-thinned = bwmorph(dilated,'thin',inf);
-Edge = imfill(thinned,'holes');
-
+Edge = LazySmoothing(Edge, false);
+Edge = imfill(Edge, 'holes');
 
 %Fill in interior of Manual_outline to perform RMSE comparison of found
 %edge with Manual_outline

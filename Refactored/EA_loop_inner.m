@@ -1,6 +1,6 @@
-function [fittest_individual, current_generation] = EA_loop(children_number,parents_number, ...
+function [fittest_individual, current_generation, population] = EA_loop_inner(children_number,parents_number, ...
     generations, loop_max, population_size, tourn_size, Image_orig, Image_name, ...
-    boundary, boundary_name, im_save_int) 
+    boundary, boundary_name, im_save_int, Outer_Edge) 
 
 
 %EA_LOOP: Main loop. Generates initial values needed to start loop, goes
@@ -33,7 +33,8 @@ for current_generation = 1:generations
     %Calculate the fitness score for each individual
     parfor i = 1:population_size
         if score_vec(i) ==0
-            score_vec(i) = individual_fitness(population(i,:), Image_orig, boundary);
+            score_vec(i) = individual_fitness_inner(population(i,:), Image_orig, boundary, ...
+                Outer_Edge);
         end
     end;
 
@@ -58,7 +59,8 @@ for current_generation = 1:generations
     children_scores = zeros(1, children_number);
     
     parfor i = 1:children_number
-        children_scores(i) = individual_fitness(children(i,:), Image_orig, boundary);
+        children_scores(i) = individual_fitness_inner(children(i,:), Image_orig, boundary, ...
+            Outer_Edge);
     end;
     
     
@@ -69,7 +71,7 @@ for current_generation = 1:generations
     [fittest_individual, loop_break_counter] = find_fittest(population, children,...
         children_scores, score_vec, loop_break_counter, fittest_individual, false);
     
-    best_scores(current_generation) = fittest_individual(6);
+    best_scores(current_generation) = fittest_individual(end);
     
     %If our current generation is a multiple of image save interval,
     %calculate edge and save (requires Save_bool of Image_orig to be set to
@@ -77,8 +79,8 @@ for current_generation = 1:generations
     if mod(current_generation,im_save_int) == 0
         
         % Calculate image output and save based on Save_bool
-        [~, ~] = Edge_OutputAndSave_Outer(fittest_individual,...
-          Image_orig, Image_name, current_generation, boundary_name, false);
+        [~, ~] = Edge_OutputAndSave_Inner(fittest_individual, ...
+            Outer_Edge, Image_orig, Image_name, current_generation, boundary_name, false);
       
     end
     

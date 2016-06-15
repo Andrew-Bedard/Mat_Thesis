@@ -1,4 +1,4 @@
-function [Edge, Edge_overlay] = Edge_OutputAndSave(fittest_individual,...
+function [Edge, Edge_overlay] = Edge_OutputAndSave_Outer(fittest_individual,...
     Image_orig, Image_name, current_generation, boundary_name, Save_bool)
 
 %EDGE_OUTPUTANDSAVE: takes parameters of fittest individual, performs
@@ -24,10 +24,7 @@ handles.Thresh_max=fittest_individual(5);  % maximum Threshold  (a number betwee
 Edge = pst2edge(Edge,3);
 
 % Lazy smoothing
-Edge = imdilate(Edge,strel('disk',7));
-Edge = bwmorph(Edge,'thin',inf);
-Edge = imfill(Edge,'holes');
-Edge = edge(Edge,'canny',[],10);
+Edge = LazySmoothing(Edge, true);
 
 % overlay original image with detected features
 overlay = double(imoverlay(Image_orig, Edge/1000000, [1 0 0]));

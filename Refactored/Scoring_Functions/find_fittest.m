@@ -28,15 +28,15 @@ generation_winner = generation_winner(1);
 % individual is different than previous generation, reset loop break
 % counter
 
-if sorted_scores(1) > fittest_individual(6)
-    fittest_individual(6) = sorted_scores(1);
-    fittest_individual(1:5) = population(generation_winner,:);
+if sorted_scores(1) > fittest_individual(end)
+    fittest_individual(end) = sorted_scores(1);
+    fittest_individual(1:(end - 1)) = population(generation_winner,:);
     loop_break_counter = 0;
 end
 
 % output score of fittest individual if disp_output = true
 
 if disp_output == true
-    sprintf('best score: %d', fittest_individual(6))
+    sprintf('best score: %d', fittest_individual(end))
 end;
 
