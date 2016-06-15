@@ -17,7 +17,7 @@ handles.Thresh_min=-fittest_individual_outer(4);      % minimum Threshold  (a nu
 handles.Thresh_max=fittest_individual_outer(5);  % maximum Threshold  (a number between 0 and 1)
 
 % Get parameters for Frangi filter, then apply filter
-Frangi_options = struct('FrangiScaleRange', [1 8], 'FrangiScaleRatio', 2, 'FrangiBetaOne', 0.99, 'FrangiBetaTwo', 7, 'verbose',false,'BlackWhite',true);
+Frangi_options = struct('FrangiScaleRange', [1 8], 'FrangiScaleRatio', 2, 'FrangiBetaOne', 0.99, 'FrangiBetaTwo', 4, 'verbose',false,'BlackWhite',true);
 
 Frangi_image = FrangiFilter2D(Image_orig,Frangi_options);
 

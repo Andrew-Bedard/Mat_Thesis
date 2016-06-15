@@ -1,7 +1,7 @@
 %function [fittest_individual, best_scores] = evo_refact_test(Image_name, indvs, generations, im_save_int,boundary_name)
 tic;
 % Use this for debugging::::
-Image_name = '6_3single';
+Image_name = 'Bmp2_4_early_gast';
 population_size = 100;
 generations = 30;
 im_save_int = 2;
