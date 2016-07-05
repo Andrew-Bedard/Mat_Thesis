@@ -13,32 +13,52 @@ try
 catch
 end
 
+%import manual boundary
+
 
 % convert the grayscale image do a 2D double array
 Image_orig=double(Image_orig);
 
+cum_edge = zeros(size(Image_orig));
+count = 0;
 
-% low-pass filtering (also called localization) parameter
-handles.LPF=0.6651; % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
+%for lpf = 0.05:0.01:0.3
+    for warp = 1:2:50
+        for stren = 1:2:60
+        %for minthresh = -0.0001:-0.00005:-0.01
+    % low-pass filtering (also called localization) parameter
+    handles.LPF=0.09; % Gaussian low-pass filter Full Width at Half Maximum (FWHM) (min:0 , max : 1)
 
-% PST parameters
-handles.Phase_strength=1;  % PST  kernel Phase Strength
-handles.Warp_strength=89;  % PST Kernel Warp Strength
+    % PST parameters
+    handles.Phase_strength=stren;  % PST  kernel Phase Strength
+    handles.Warp_strength=warp    ;  % PST Kernel Warp Strength
 
-% Thresholding parameters (for post processing)
-handles.Thresh_min=-0.0058;      % minimum Threshold  (a number between 0 and -1)
-handles.Thresh_max=0.7104;  % maximum Threshold  (a number between 0 and 1)
+    % Thresholding parameters (for post processing)
+    handles.Thresh_min=-0.01;      % minimum Threshold  (a number between 0 and -1)
+    handles.Thresh_max=0.9;  % maximum Threshold  (a number between 0 and 1)
 
-Morph_flag = 1;
+    Morph_flag = 1;
 
-% Apply PST and find features (sharp transitions)
-[Edge1, ~]= PST(Image_orig,handles,Morph_flag);
+    % Apply PST and find features (sharp transitions)
+    [Edge1, ~]= PST(Image_orig,handles,Morph_flag);
+    
+    cum_edge = Edge1 + cum_edge;
+    
+    count = count+1;
+    
+    imshow(Edge1)
+    
+    %pause(0.);
 
+
+        end
+    end
+%end
 
 if Morph_flag ==0
     % show the detected features    
     figure()
-    imshow(Edge1/max(max(Edge1))*3)
+    imshow(cum_edge/max(max(cum_edge))*3)
     title('Detected features using PST')
    
 else
@@ -64,6 +84,9 @@ else
     figure
     imshow(overlay/max(max(max(overlay))));
     title('Detected features using PST overlaid with original image')
+    
+    figure
+    imshow(cum_edge);
 
 
     % show the PST phase kernel gradient
@@ -82,5 +105,10 @@ else
     % imshow(Edge);
 end
 
-
-
+edge2 = bwmorph(cum_edge,'majority');
+edge3 = bwmorph(edge2,'bridge');
+edge4 = bwmorph(edge3,'clean');
+edge5 = imdilate(edge4,strel('disk',3,8));
+edge6 = bwmorph(edge5,'bridge');
+edge7 = bwareafilt(edge6,1);
+figure;imshow(edge7)

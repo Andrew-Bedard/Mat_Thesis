@@ -1,4 +1,4 @@
-I_name = 'Bmp2_4_early_gast';
+I_name = 'chordin';
 
 % import original image
 
@@ -9,7 +9,7 @@ Image_orig=imread(sprintf('%s.jpg',I_name));
 params = load(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/EA_prog/Outer/Pre_smoothing/%s/fittest_ind.mat',I_name));
 
 params = struct2array(params);
-params = fittest_individual_outer(1:5);
+%params = fittest_individual_outer(1:5);
 %Frangi%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 options = struct('FrangiScaleRange', [1 8], 'FrangiScaleRatio', 2, 'FrangiBetaOne', 0.99, 'FrangiBetaTwo', 4, 'verbose',false,'BlackWhite',true);
@@ -30,60 +30,77 @@ handles.Warp_strength=params(3);  % PST Kernel Warp Strength
 handles.Thresh_min=params(4);      % minimum Threshold  (a number between 0 and -1)
 handles.Thresh_max=params(5);  % maximum Threshold  (a number between 0 and 1)
 
+Morph_flag = 1;
+
 % Apply PST and find features (sharp transitions)
-[Edge, ~]= PST(Ivessel,handles,1);
-
-%Image processing, dilating eroding and taking complement to get inner
-%area%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-e2 = Edge;
-se = strel('disk',3,8);
-e3 = imdilate(e2,se);
-%e_3 = bwmorph(e3,'bridge');
-e4 = bwareafilt(e3,1,'largest');
-e5 = imdilate(e4,se);
-e6 = imerode(e5,se);
-e6 = bwareafilt(e6,1,'largest');
-e7 = imcomplement(e6);
+[Edge, ~]= PST(Ivessel,handles, Morph_flag);
 
 
-%%%%%%% Get Outer Edge %%%%%%%%%
+if Morph_flag ==0
+    % show the detected features    
+    figure()
+    imshow(Edge/max(max(Edge))*3)
+    title('Detected features using PST')
+    
+else
 
-[Edge,~] = PST(Image_orig,handles,1);
+    figure()
+    imshow(Edge)
+    
+    Edge_orig = Edge;
+
+    %Image processing, dilating eroding and taking complement to get inner
+    %area%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    e2 = Edge;
+    se = strel('disk',3,8);
+    e3 = imdilate(e2,se);
+    %e_3 = bwmorph(e3,'bridge');
+    e4 = bwareafilt(e3,1,'largest');
+    e5 = imdilate(e4,se);
+    e6 = imerode(e5,se);
+    e6 = bwareafilt(e6,1,'largest');
+    e7 = imcomplement(e6);
 
 
-Edge = pst2edge(Edge,4);
+    %%%%%%% Get Outer Edge %%%%%%%%%
 
-% Lazy smoothing
-dilated = imdilate(Edge,strel('disk',7));
-thinned = bwmorph(dilated,'thin',inf);
+    [Edge,~] = PST(Image_orig,handles,1);
 
-% New smoothing
-thinned = imfill(thinned,'holes');
-thinned = edge(thinned,'canny',[],10);
-outedge = thinned;
 
-%%%% Remove everything not inside calculated outer edge%%%%%
-filledout = imfill(outedge,'holes');
-for i = 1:280
-    for j = 1:280
-        if filledout(i,j) ==0
-            e7(i,j) = 0;
+    Edge = pst2edge(Edge,4);
+
+    % Lazy smoothing
+    dilated = imdilate(Edge,strel('disk',7));
+    thinned = bwmorph(dilated,'thin',inf);
+
+    % New smoothing
+    thinned = imfill(thinned,'holes');
+    thinned = edge(thinned,'canny',[],10);
+    outedge = thinned;
+
+    %%%% Remove everything not inside calculated outer edge%%%%%
+    filledout = imfill(outedge,'holes');
+    for i = 1:280
+        for j = 1:280
+            if filledout(i,j) == 0
+                e7(i,j) = 0;
+            end
         end
     end
+
+    %%%%% More image processing, dilating eroding and taking perimeter
+    e8 = bwareafilt(e7,1,'largest');
+    e9 = imerode(e8,se);
+    dilated = imdilate(e9,strel('disk',7));
+    new_edge = bwperim(dilated);
+    new_edge = bwareafilt(new_edge,1,'largest');
+
+    % New Smoothing
+    % new_edge = imfill(new_edge,'holes');
+    % new_edge = edge(new_edge,'canny',[],8);
+
+    overlay = double(imoverlay(Image_orig, new_edge/1000000, [1 0 0]));
+    figure
+    imshow(overlay/max(max(max(overlay))));
+    title('Detected features using PST overlaid with original image')
 end
-
-%%%%% More image processing, dilating eroding and taking perimeter
-e8 = bwareafilt(e7,1,'largest');
-e9 = imerode(e8,se);
-dilated = imdilate(e9,strel('disk',7));
-new_edge = bwperim(dilated);
-new_edge = bwareafilt(new_edge,1,'largest');
-
-% New Smoothing
-% new_edge = imfill(new_edge,'holes');
-% new_edge = edge(new_edge,'canny',[],8);
-
-overlay = double(imoverlay(Image_orig, new_edge/1000000, [1 0 0]));
-figure
-imshow(overlay/max(max(max(overlay))));
-title('Detected features using PST overlaid with original image')
