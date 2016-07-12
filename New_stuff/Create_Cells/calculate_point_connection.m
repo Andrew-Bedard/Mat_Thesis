@@ -34,14 +34,14 @@ D = regionprops(bw_out, 'Perimeter');
 
 cell_dist = round(struct2array(D(1))/cell_number);
 
-connection_list = zeros(4, cell_number);
+connection_list = zeros(4, length(1:cell_dist:length(coord_array_in)));
 counter = 0;
 
 for i = 1:cell_dist:length(coord_array_out)
     
     counter = counter + 1;
     
-    dummy_vec = zeros(1,length(coord_array_in));
+    dummy_vec = zeros(1, length(1:cell_dist:length(coord_array_in)));
     
     out_coords = coord_array_out(:,i)';
     

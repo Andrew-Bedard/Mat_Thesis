@@ -7,11 +7,10 @@ lengths = zeros(length(connection_list), length(connection_list));
 
 for i = 1:length(connection_list)
     for j = 1:i
-        x = [connection_list(1,i) connection_list(1,j)];
-        y = [connection_list(2,i) connection_list(2,j)];
+        x = [connection_list(1,i) connection_list(1,j)]';
+        y = [connection_list(2,i) connection_list(2,j)]';
         
-        %lengths(i,j) = line_length([y; x]);
-        lengths(i,j) = pdist([x; y], 'euclidean');
+        lengths(i,j) = pdist([x, y], 'euclidean');
     end
 end
 

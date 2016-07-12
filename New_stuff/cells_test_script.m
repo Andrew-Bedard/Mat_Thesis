@@ -48,8 +48,7 @@ for i = 1:length(connection_list) - 1
     bw_total = bw_total + bw;
     
     imshow(bw);
-    pause(0.1)
-    
+    pause(0.05)
     
 end
 

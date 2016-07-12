@@ -7,6 +7,16 @@ cell_num = 100;
 
 [connection_list, bw_in, bw_out] = calculate_point_connection('26.1', cell_num);
 
+dummy_connection_list = connection_list;
+
+for i = 1:length(connection_list)
+    if connection_list(:,i) == zeros(4, 1);
+        dummy_connection_list(:,i) = [];
+    end
+end
+
+connection_list = dummy_connection_list;
+
 %Fill in boundaries of logical image
 
 filled_in = imfill(bw_in, 'holes');
@@ -18,51 +28,11 @@ Out_minus_in = filled_out - filled_in;
 
 %For each outer point, find the distance to all other outer points
 
-lengths = zeros(length(connection_list), length(connection_list));
-
-for i = 1:length(connection_list)
-    for j = 1:i
-        x = [connection_list(1,i) connection_list(1,j)];
-        y = [connection_list(2,i) connection_list(2,j)];
-        
-        lengths(i,j) = line_length([x; y]);
-    end
-end
-
-%We will be searching for minimums, so get rid of zeros
-lengths( lengths == 0) = NaN;
+lengths = find_all_lengths(connection_list);
 
 %Create a new connection list where adjacent columns are closest neighbours
 
-connection_list_dummy = connection_list;
-connection_list_new = zeros(size(connection_list));
-
-lengths_dummy = lengths;
-
-counter = 1;
-
-p2 = connection_list_dummy(:,1);
-connection_list_new(:,1) = p2;
-
-listy = 1:length(connection_list);
-
-for i = 2:length(connection_list)
-    
-    counter = counter + 1;
-    
-    p1 = p2;
-    [min_value, I] = min(lengths_dummy(:, i));
-    p2 = connection_list_dummy(:, I);
-    
-    %connection_list_new(:,counter) = p1;
-    connection_list_new(:,counter) = p2;
-    
-    %Get rid of value for already adjacent entries
-    lengths_dummy(I, i) = NaN;
-    
-end
-
-connection_list = connection_list_new;
+connection_list = adjacent_vertecies(connection_list, lengths);
 
 
 %bw_total is to see if things are working properly, as we should recover
@@ -83,7 +53,7 @@ for i = 1:length(connection_list) - 1
     yv(3) = connection_list(4, i + 1);
     yv(4) = connection_list(2, i + 1);
 
-    bw = roipoly(Out_minus_in, xv, yv);
+    bw = roipoly(Out_minus_in, yv, xv);
     
     bw_total = bw_total + bw;
     
