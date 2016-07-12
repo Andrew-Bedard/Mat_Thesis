@@ -1,9 +1,6 @@
-function [diff_inner, diff_outer] = Calculate_sim_detected_score(Outer_Edge, Inner_Edge)
-
 Simulated_contents = dir('C:\Users\Andy\Documents\School\Thesis\Data\Simulated2bw');
 
-diff_inner = zeros(1,numel(simulated_contents));
-diff_outer = zeros(1,numel(simulated_contents));
+diff_inner = zeros(1,numel(simulated_contents))
 
 for i = 1:numel(Simulated_contents)
 
