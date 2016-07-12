@@ -1,4 +1,4 @@
-function [connection_list] = calculate_point_connection(name, cell_number)
+function [connection_list, bw_in, bw_out] = calculate_point_connection(name, cell_number)
 
 %Calculates the closest interior edge point to specified outer edge points.
 %The output connection_list contains two sets of coordinates, where
@@ -25,11 +25,14 @@ bw_out = bwmorph(bw_out, 'thin', inf);
 
 %Transform logical array for boundaries into sets of coordinates to make
 %measuring distances easier
+
 coord_array_in = bw2coords(bw_in);
 coord_array_out = bw2coords(bw_out);
 
 %Distance between each slice based on cell_number
-cell_dist = round(length(coord_array_out)/50);
+D = regionprops(bw_out, 'Perimeter');
+
+cell_dist = round(struct2array(D(1))/cell_number);
 
 connection_list = zeros(4, cell_number);
 counter = 0;

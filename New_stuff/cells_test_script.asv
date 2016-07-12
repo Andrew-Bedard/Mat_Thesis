@@ -1,0 +1,96 @@
+%Get list of all point connections, inbetween which we create splines
+%Recall that connection_list(1:2,:) are the outer points, and
+%connection_list(3:4,:) are the inner points.
+
+%Number of subdivided cells
+cell_num = 100;
+
+[connection_list, bw_in, bw_out] = calculate_point_connection('26.1', cell_num);
+
+%Fill in boundaries of logical image
+
+filled_in = imfill(bw_in, 'holes');
+filled_out = imfill(bw_out, 'holes');
+
+%Difference between Outer filled and inner filled gives area of interest
+
+Out_minus_in = filled_out - filled_in;
+
+%For each outer point, find the distance to all other outer points
+
+lengths = zeros(length(connection_list), length(connection_list));
+
+for i = 1:length(connection_list)
+    for j = 1:i
+        x = [connection_list(1,i) connection_list(1,j)];
+        y = [connection_list(2,i) connection_list(2,j)];
+        
+        lengths(i,j) = line_length([x; y]);
+    end
+end
+
+%We will be searching for minimums, so get rid of zeros
+lengths( lengths == 0) = NaN;
+
+%Create a new connection list where adjacent columns are closest neighbours
+
+connection_list_dummy = connection_list;
+connection_list_new = zeros(size(connection_list));
+
+lengths_dummy = lengths;
+
+counter = 1;
+
+p2 = connection_list_dummy(:,1);
+connection_list_new(:,1) = p2;
+
+listy = 1:length(connection_list);
+
+for i = 2:length(connection_list)
+    
+    counter = counter + 1;
+    
+    p1 = p2;
+    [min_value, I] = min(lengths_dummy(:, i));
+    p2 = connection_list_dummy(:, I);
+    
+    %connection_list_new(:,counter) = p1;
+    connection_list_new(:,counter) = p2;
+    
+    %Get rid of value for already adjacent entries
+    lengths_dummy(I, i) = NaN;
+    
+end
+
+connection_list = connection_list_new;
+
+
+%bw_total is to see if things are working properly, as we should recover
+%the full bw image from combining all the individual cells
+bw_total = zeros(size(Out_minus_in));
+
+for i = 1:length(connection_list) - 1
+
+    xv = zeros(1,4);
+    xv(1) = connection_list(1, i);
+    xv(2) = connection_list(3, i);
+    xv(3) = connection_list(3, i + 1);
+    xv(4) = connection_list(1, i + 1);
+
+    yv = zeros(1,4);
+    yv(1) = connection_list(2, i);
+    yv(2) = connection_list(4, i);
+    yv(3) = connection_list(4, i + 1);
+    yv(4) = connection_list(2, i + 1);
+
+    bw = roipoly(Out_minus_in, xv, yv);
+    
+    bw_total = bw_total + bw;
+    
+    imshow(bw);
+    pause(0.1)
+    
+    
+end
+
+imshow(bw_total)

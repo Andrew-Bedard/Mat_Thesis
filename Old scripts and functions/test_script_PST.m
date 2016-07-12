@@ -13,7 +13,6 @@ try
 catch
 end
 
-
 % convert the grayscale image do a 2D double array
 Image_orig=double(Image_orig);
 

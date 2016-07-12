@@ -1,4 +1,4 @@
-% % test script to test PST function
+% % test script to see if I can better detect inner edges
 % 
 % %clc  % clear screen
 % %clear all  % clear all variables
