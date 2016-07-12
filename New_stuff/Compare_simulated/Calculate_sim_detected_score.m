@@ -5,7 +5,7 @@ Simulated_contents = dir('C:\Users\Andy\Documents\School\Thesis\Data\Simulated2b
 diff_inner = zeros(1,numel(Simulated_contents));
 diff_outer = zeros(1,numel(Simulated_contents));
 
-for i = 1:numel(Simulated_contents)
+for i = 3:numel(Simulated_contents)
 
     gast_time = Simulated_contents(i).name;
     
@@ -46,4 +46,4 @@ for i = 1:numel(Simulated_contents)
 end
 
 diff_inner(diff_inner == 0) = [];
-diff_outer(diff_inner == 0) = [];
+diff_outer(diff_outer == 0) = [];

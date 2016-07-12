@@ -3,7 +3,7 @@
 %connection_list(3:4,:) are the inner points.
 
 %Number of subdivided cells
-cell_num = 100;
+cell_num = 1000;
 
 [connection_list, bw_in, bw_out] = calculate_point_connection('26.1', cell_num);
 

@@ -9,8 +9,8 @@ parents_number = 10;
 tourn_size = 40;
 loop_max = 5;
 
-%for i = 1:numel(contents)
- for i = 1:3
+for i = 3:numel(contents)
+ %for i = 1:3
   filename = contents(i).name;
   
   % Open the file specified in filename, do your processing...
@@ -18,7 +18,7 @@ loop_max = 5;
   
   % Prevent from trying to run EA on files not associated with image file,
   % or have already had EA run over
-  if exist(sprintf('%s.jpg',Image_name),'file') ~= 0
+  if exist(sprintf('%s.jpg',Image_name),'file') ~= 0 && exist(sprintf('%s_mask_inner.mat', Image_name), 'file') ~= 0
       
       % Name of directory to save binary images
       dirpath = sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/EA_Batch');
@@ -68,15 +68,20 @@ loop_max = 5;
     figure
     Combined_overlay = imshow(overlay/max(max(max(overlay))));
     
-    saveas(Combined_overlay, sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Batch_results/%s.jpg',Image_name));
+    %saveas(Combined_overlay, sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Batch_results/%s_edges.jpg',Image_name));
     
     close all
 
-    outer_coords = bw2coords(Outer_Edge);
-    inner_coords = bw2coords(Inner_Edge);
+    %outer_coords = bw2coords(Outer_Edge);
+    %inner_coords = bw2coords(Inner_Edge);
 
-    csvwrite(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Batch_results/%s_outer.csv',Image_name),outer_coords);
-    csvwrite(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Batch_results/%s_inner.csv',Image_name),inner_coords);
+    %csvwrite(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Batch_results/%s_outer.csv',Image_name),outer_coords);
+    %csvwrite(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Batch_results/%s_inner.csv',Image_name),inner_coords);
+    
+    save(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Batch_results/%s_Inner_Edge.mat',Image_name), 'Inner_Edge');
+    save(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Batch_results/%s_Outer_Edge.mat',Image_name), 'Outer_Edge');
+    
+    
       
 
   end
