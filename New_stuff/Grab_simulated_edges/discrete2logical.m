@@ -1,5 +1,8 @@
 function [bw_in, bw_out] = discrete2logical(rounded_in, rounded_out)
 
+%For use in csv2logical, takes rounded_in and rounded_out an converts both
+%into logical arrays where bw_in(i,j) == 1 if rounded_in(X,X) = (i;j)
+
 bw_in = zeros(max(rounded_out(2,:)), max(rounded_out(1,:)));
 bw_out = zeros(max(rounded_out(2,:)), max(rounded_out(1,:)));
 

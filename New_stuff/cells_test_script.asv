@@ -32,8 +32,7 @@ lengths = find_all_lengths(connection_list);
 %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-%Create masks using roipoly, which specifies a polygon from the set of 4
-%coordinates, in our case the verticies of our slices.
+
 
 %bw_total is to see if things are working properly, as we should recover
 %the full bw image from combining all the individual cells
@@ -82,6 +81,6 @@ bw = roipoly(Out_minus_in, yv, xv);
 bw_total = bw_total + bw;
 
 imshow(bw);
-pause(0.01)
+    pause(0.01)
 
 imshow(bw_total)
