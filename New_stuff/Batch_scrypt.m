@@ -39,11 +39,22 @@ for i = 3:numel(contents)
     % import cropped image of manual outline ( note, loads as boundary)
 
     boundary = Import_manual(Image_name, boundary_name);
+    
+    fittest_individual_outer = -99999999;
+    
+    for t = 1:5
+        
+        fit_dummy = fittest_individual_outer;
 
-    %EA loop for outer boundary
-    [fittest_individual_outer, current_generation] = EA_loop(children_number,parents_number, ...
-        generations, loop_max, population_size, tourn_size, Image_orig, Image_name, ...
-        boundary, boundary_name, im_save_int);
+        %EA loop for outer boundary
+        [fittest_individual_outer, current_generation] = EA_loop(children_number,parents_number, ...
+            generations, loop_max, population_size, tourn_size, Image_orig, Image_name, ...
+            boundary, boundary_name, im_save_int);
+        
+        if fittest_individual_outer < fit_dummy
+            fittest_individual_outer = fit_dummy;
+        end
+    end
 
 
     %Take a look at what outer edge looks like, last parameter for saving, set
@@ -57,7 +68,6 @@ for i = 3:numel(contents)
     boundary_name = 'Inner';
     % 
     boundary = Import_manual(Image_name, boundary_name);
-
 
     [Inner_Edge, Edge_overlay] = Edge_OutputAndSave_Inner_nonEA(fittest_individual_outer,...
         Outer_Edge, Image_orig, Image_name, current_generation, boundary_name, false);

@@ -1,5 +1,21 @@
 function [bw_outer, bw_inner] = Simulated_Overlay(diff_inner, diff_outer,...
-    Inner_Edge, Outer_Edge, Image_orig, combine_method)
+    Inner_Edge, Outer_Edge, Image_orig, combine_method, pad_method)
+
+%Takes as arguments
+%diff_inner: the list of errors between each developmental stage and our
+%detected inner edges, Inner_Edge
+%diff_outer: the list of errors between each developmental stage and our
+%detected outer edges, Outer_Edge
+%Image_orig: the original image
+%combine_method: because both inner and outer boundaries must correspond to
+%a single developmental stage, combine_method is selected in order to
+%either average the estimated age from both the inner and outer boundary,
+%only use the estimated age for the inner boundary, or only use the
+%estimated age for the outer boundary.
+
+%Outputs
+%bw_outer: the final outer edge, as a logical array
+%bw_inner: the final inner edge, as a logical array
 
 Simulated_contents = dir('C:\Users\Andy\Documents\School\Thesis\Data\Simulated2bw');
 
@@ -16,6 +32,7 @@ Simulated_contents = Simulated_contents(1:2:end);
 if strcmp('average', combine_method) == 1
     
     I3 = (I1+I2)/2;
+    I3 = round(I3);
 
     inner_cand = Simulated_contents(I3).name;
     outer_cand = Simulated_contents(I3).name;
@@ -55,8 +72,8 @@ bw_in = bwmorph(bw_in, 'thin', inf);
 bw_out = bwmorph(bw_out, 'thin', inf);
 
 %Resize simulated edge
-bw_resized_inner = Resize_and_Pad(Inner_Edge, bw_in);
-bw_resized_outer = Resize_and_Pad(Outer_Edge, bw_out);
+bw_resized_inner = Resize_and_Pad(Inner_Edge, bw_in, pad_method);
+bw_resized_outer = Resize_and_Pad(Outer_Edge, bw_out, pad_method);
 
 
 % bw_resized_inner = imlincomb(0.5, , 0.5, );

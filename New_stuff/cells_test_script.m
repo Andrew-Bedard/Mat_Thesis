@@ -3,7 +3,7 @@
 %connection_list(3:4,:) are the inner points.
 
 %Number of subdivided cells
-cell_num = 100;
+cell_num = 200;
 
 %Get closest point on inner edge to specified outer edge point.
 %connection_list is the pairs of all these points.
@@ -25,7 +25,7 @@ lengths = find_all_lengths(connection_list);
 %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 %Created adjacent_verticies because of issues with coordinate ordering, but
 %with using the built in matlab function bwboundaries() instead of my own
-%function the problem with ordering no longer exists.
+%function: bw2coors() the problem with ordering no longer exists.
 
 %Create a new connection list where adjacent columns are closest neighbours
 %connection_list = adjacent_vertecies(connection_list, lengths);

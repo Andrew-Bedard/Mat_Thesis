@@ -3,6 +3,10 @@ function coord_array = bw2coords(bw_array)
 %Takes logical array, outputs array of two vectors that contain the
 %indicies of nonzero elements.
 
+%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+%Don't use this function, instead imfill() then use bwboundaries()
+%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 coord_array = zeros(2,length(bw_array));
 
 counter = 0;

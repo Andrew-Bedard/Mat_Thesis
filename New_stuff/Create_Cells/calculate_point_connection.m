@@ -26,6 +26,15 @@ bw_out = bwmorph(bw_out, 'thin', inf);
 %Transform logical array for boundaries into sets of coordinates to make
 %measuring distances easier
 
+
+%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+%There were issues using my own function bw2coords, use bwboundaries()
+%instead
+% coord_array_in = bw2coords(bw_in);
+% coord_array_out = bw2coords(bw_out);
+%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 bw_in_filled = imfill(bw_in, 'holes');
 bw_out_filled = imfill(bw_out, 'holes');
 
@@ -34,13 +43,6 @@ coord_array_out = bwboundaries(bw_out_filled);
 
 coord_array_in = coord_array_in{1}';
 coord_array_out = coord_array_out{1}';
-
-%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-%There were issues using my own function bw2coords, use bwboundaries()
-%instead
-% coord_array_in = bw2coords(bw_in);
-% coord_array_out = bw2coords(bw_out);
-%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 %Distance between each slice based on cell_number
 D = regionprops(bw_out, 'Perimeter');

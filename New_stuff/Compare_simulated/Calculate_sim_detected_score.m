@@ -1,4 +1,10 @@
-function [diff_inner, diff_outer] = Calculate_sim_detected_score(Outer_Edge, Inner_Edge)
+function [diff_inner, diff_outer] = Calculate_sim_detected_score(Outer_Edge, Inner_Edge, pad_method)
+
+%Calculates the difference between detected inner edge: Inner_Edge and
+%every stage of the simulated edges, adjusted for size and position of
+%Inner_Edge, and the same for Outer_Edge.
+%pad_method is the method used to centre and scale the simulated edge w.r.t
+%detected edge, default is 'extreme', see Resize_and_Pad for details.
 
 Simulated_contents = dir('C:\Users\Andy\Documents\School\Thesis\Data\Simulated2bw');
 
@@ -32,14 +38,14 @@ for i = 1:2:numel(Simulated_contents)
     bw_out = bwmorph(bw_out, 'thin', inf);
 
     %Resize simulated edge
-    bw_resized = Resize_and_Pad(Outer_Edge, bw_out);
+    bw_resized = Resize_and_Pad(Outer_Edge, bw_out, pad_method);
 
     %Find difference (in number of pixels) between simulated and detected edge
     [diff_score, ~] = Simulated_Measured_diff(Outer_Edge, bw_resized);
 
     diff_outer(i) = diff_score;
 
-    bw_resized = Resize_and_Pad(Inner_Edge, bw_in);
+    bw_resized = Resize_and_Pad(Inner_Edge, bw_in, pad_method);
 
     [diff_score, ~] = Simulated_Measured_diff(Inner_Edge, bw_resized);
 
