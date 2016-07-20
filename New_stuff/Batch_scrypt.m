@@ -9,8 +9,8 @@ parents_number = 10;
 tourn_size = 40;
 loop_max = 5;
 
-for i = 3:numel(contents)
- %for i = 1:3
+%for i = 3:numel(contents)
+ for i = 1:3
   filename = contents(i).name;
   
   % Open the file specified in filename, do your processing...
@@ -28,7 +28,7 @@ for i = 3:numel(contents)
           mkdir(dirpath);
       end
 
-
+      tic
     boundary_name = 'Outer';
 
 
@@ -42,19 +42,25 @@ for i = 3:numel(contents)
     
     fittest_individual_outer = -99999999;
     
-    for t = 1:5
-        
-        fit_dummy = fittest_individual_outer;
-
-        %EA loop for outer boundary
-        [fittest_individual_outer, current_generation] = EA_loop(children_number,parents_number, ...
-            generations, loop_max, population_size, tourn_size, Image_orig, Image_name, ...
-            boundary, boundary_name, im_save_int);
-        
-        if fittest_individual_outer < fit_dummy
-            fittest_individual_outer = fit_dummy;
-        end
-    end
+%     for t = 1:5
+%         
+%         fit_dummy = fittest_individual_outer;
+% 
+%         %EA loop for outer boundary
+%         [fittest_individual_outer, current_generation] = EA_loop(children_number,parents_number, ...
+%             generations, loop_max, population_size, tourn_size, Image_orig, Image_name, ...
+%             boundary, boundary_name, im_save_int);
+%         
+%         if fittest_individual_outer < fit_dummy
+%             fittest_individual_outer = fit_dummy;
+%         end
+%     end
+    
+    
+    %EA loop for outer boundary
+[fittest_individual_outer, current_generation] = EA_loop(children_number,parents_number, ...
+    generations, loop_max, population_size, tourn_size, Image_orig, Image_name, ...
+    boundary, boundary_name, im_save_int);
 
 
     %Take a look at what outer edge looks like, last parameter for saving, set
@@ -92,7 +98,6 @@ for i = 3:numel(contents)
     save(sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Batch_results/%s_Outer_Edge.mat',Image_name), 'Outer_Edge');
     
     
-      
-
+      toc
   end
 end

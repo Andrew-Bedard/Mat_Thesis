@@ -6,7 +6,7 @@ tic;
 Image_name = 'Nanos2ega2';
 population_size = 100;
 generations = 20;
-im_save_int = 0;
+im_save_int = 2;
 children_number = 5;
 parents_number = 10;
 %Number of individuals in tournament

@@ -46,3 +46,18 @@ for i = 1:length(Edge(:,1))
 end
 
 fitness_score = score;
+% 
+% %%%%%Test for gradient score%%%%%%%
+% 
+% Orientations = skeletonOrientation(Edge,5);
+% 
+% 
+% %Compare all pixels of image, subtract 1 from score every time pixel does
+% %not match
+% 
+% % Score 
+% score = Manual_outline == Edge;
+% diff_score = length(Manual_outline)^2 - score;
+% 
+% 
+% fitness_score = -diff_score;

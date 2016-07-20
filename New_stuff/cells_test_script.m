@@ -3,7 +3,7 @@
 %connection_list(3:4,:) are the inner points.
 
 %Number of subdivided cells
-cell_num = 200;
+cell_num = 100;
 
 %Get closest point on inner edge to specified outer edge point.
 %connection_list is the pairs of all these points.
@@ -58,7 +58,7 @@ for i = 1:length(connection_list) - 1
     bw_total = bw_total + bw;
     
     imshow(bw);
-    pause(0.05)
+    pause(0.01)
     
 end
 
