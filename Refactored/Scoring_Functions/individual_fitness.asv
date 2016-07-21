@@ -29,31 +29,24 @@ Edge = imfill(Edge, 'holes');
 %edge with Manual_outline
 Manual_outline = imfill(Manual_outline,'holes');
 
+%Compare all pixels of image, subtract 1 from score every time pixel does
+%not match
 
+% Score 
+score = 0;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% REPLACED THIS NESTED LOOP WITH MORE EFFICIENT CODE BELOW
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% %Compare all pixels of image, subtract 1 from score every time pixel does
-% %not match
+for i = 1:length(Edge(:,1))
+    for j = 1:length(Edge(1,:))
+        if Manual_outline(i,j) == 1 && Edge(i,j) == 0
+            score = score - 1;
+        elseif Manual_outline(i,j) == 0 && Edge(i,j) == 1
+            score = score - 1;
+        end
+    end
+end
+
+fitness_score = score;
 % 
-% % Score 
-% score = 0;
-% 
-% for i = 1:length(Edge(:,1))
-%     for j = 1:length(Edge(1,:))
-%         if Manual_outline(i,j) == 1 && Edge(i,j) == 0
-%             score = score - 1;
-%         elseif Manual_outline(i,j) == 0 && Edge(i,j) == 1
-%             score = score - 1;
-%         end
-%     end
-% end
-% 
-% fitness_score = score;
-
-
-
 %%%%%Test for gradient score%%%%%%%
 
 %Orientations = skeletonOrientation(Edge,5);
@@ -62,9 +55,9 @@ Manual_outline = imfill(Manual_outline,'holes');
 %Compare all pixels of image, subtract 1 from score every time pixel does
 %not match
 
-Score 
-score = sum(sum(Manual_outline == Edge));
-diff_score = length(Manual_outline)^2 - score;
-
-
-fitness_score = -diff_score;
+% Score 
+% score = sum(sum(Manual_outline == Edge));
+% diff_score = length(Manual_outline)^2 - score;
+% 
+% 
+% fitness_score = -diff_score;
