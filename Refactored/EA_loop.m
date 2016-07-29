@@ -32,7 +32,7 @@ for current_generation = 1:generations
     
     %Calculate the fitness score for each individual
     parfor i = 1:population_size
-        if score_vec(i) ==0
+        if score_vec(i) == 0
             score_vec(i) = individual_fitness(population(i,:), Image_orig, boundary);
         end
     end;

@@ -5,7 +5,7 @@
 % %close all   % close all figures
 % 
 % import original image
-Image_orig=imread('chordin.jpg');
+Image_orig=imread('smad4-likeega2.jpg');
 
 % if image is a color image, convert it to grayscale
 try

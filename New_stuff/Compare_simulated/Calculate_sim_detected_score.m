@@ -14,7 +14,7 @@ Simulated_contents(1:2) = [];
 diff_inner = zeros(1,numel(Simulated_contents)/2);
 diff_outer = zeros(1,numel(Simulated_contents)/2);
 
-for i = 1:2:numel(Simulated_contents)
+for i = 1:2:(numel(Simulated_contents) - 10)
 
     gast_time = Simulated_contents(i).name;
     

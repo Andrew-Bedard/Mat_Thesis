@@ -1,4 +1,4 @@
-I_name = 'chordin';
+I_name = 'smad4-likeega2';
 
 % import original image
 

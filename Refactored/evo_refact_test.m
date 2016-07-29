@@ -3,9 +3,9 @@
 %function [fittest_individual, best_scores] = evo_refact_test(Image_name, indvs, generations, im_save_int,boundary_name)
 tic;
 % Use this for debugging::::
-Image_name = 'Nanos2ega2';
+Image_name = 'smad4-likeega2';
 population_size = 100;
-generations = 10;
+generations = 30;
 im_save_int = 2;
 children_number = 5;
 parents_number = 10;
@@ -67,5 +67,5 @@ Combined_overlay = imshow(overlay/max(max(max(overlay))));
 outer_coords = bw2coords(Outer_Edge);
 inner_coords = bw2coords(Inner_Edge);
 
-csvwrite(sprintf('%s_outer.csv',Image_name),outer_coords);
-csvwrite(sprintf('%s_inner.csv',Image_name),inner_coords);
+% csvwrite(sprintf('%s_outer.csv',Image_name),outer_coords);
+% csvwrite(sprintf('%s_inner.csv',Image_name),inner_coords);

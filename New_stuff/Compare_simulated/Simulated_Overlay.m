@@ -22,7 +22,7 @@ Simulated_contents = dir('C:\Users\Andy\Documents\School\Thesis\Data\Simulated2b
 %Get rid of .db files that always appear in front
 Simulated_contents(1:2) = [];
 
-%Only want to know developmental stage, not whethere it is inner or outer
+%Only want to know developmental stage, not whether it is inner or outer
 %boundary, that distinction is left for a later step below.
 Simulated_contents = Simulated_contents(1:2:end);
 
@@ -75,15 +75,79 @@ bw_out = bwmorph(bw_out, 'thin', inf);
 bw_resized_inner = Resize_and_Pad(Inner_Edge, bw_in, pad_method);
 bw_resized_outer = Resize_and_Pad(Outer_Edge, bw_out, pad_method);
 
+full_length = length(bw_resized_outer);
 
-% bw_resized_inner = imlincomb(0.5, , 0.5, );
-% bw_resized_outer = imlincomb(0.5,, 0.5, );
+%Compare the size of bw_resized inner and outer to the size of bw_in and
+%bw_out. The idea is if there is a huge discrepancy then there may be
+%something funky happening, usually with bw_resized_inner from the detected
+%inner edge being of poor quality, use default size relative to 
+%bw_resized_outer.
+
+resized_ratio = dimensions_compare(bw_resized_inner, bw_resized_outer);
+
+simulated_ratio = dimensions_compare(bw_in, bw_out);
+
+[x_out_diff, y_out_diff, ~] = extreme_diff(bw_resized_outer);
+
+if simulated_ratio(1)/resized_ratio(1) < 0.5 || simulated_ratio(2)/resized_ratio(2) < 0.5 % || simulated_ratio(1)/resized_ratio(1) > 0.85 || simulated_ratio(2)/resized_ratio(2) > 0.85
+    in_filled = imfill(bw_in,'holes');
+    bw_resized_inner = imresize(in_filled, [(1/simulated_ratio(1))*x_out_diff (1/simulated_ratio(2))*y_out_diff]);
+    bw_new = zeros(size(bw_resized_outer));
+    
+    bw_resized_inner_filled = imfill(bw_resized_inner, 'holes');
+    bw_resized_inner_coords = bwboundaries(bw_resized_inner_filled);
+    bw_resized_inner_coords = bw_resized_inner_coords{1}';
+    
+    bw_resized_outer_filled = imfill(bw_resized_outer, 'holes');
+    bw_resized_outer_coords = bwboundaries(bw_resized_outer_filled);
+    bw_resized_outer_coords = bw_resized_outer_coords{1}';
+    
+%    x_in_max = max(bw_resized_inner_coords(1,:));
+    x_in_min = min(bw_resized_inner_coords(1,:));
+%   y_in_max = max(bw_resized_inner_coords(2,:));
+    y_in_min = min(bw_resized_inner_coords(2,:));
+    
+    %x_out_max = max(bw_resized_outer_coords(1,:));
+     x_out_min = min(bw_resized_outer_coords(1,:));
+    %y_out_max = max(bw_resized_outer_coords(2,:));
+     y_out_min = min(bw_resized_outer_coords(2,:));
+
+    
+    for i = 1:length(bw_resized_inner_coords)
+        bw_new(x_in_min + x_out_min + bw_resized_inner_coords(1,i), y_in_min + y_out_min + bw_resized_inner_coords(2, i)) = 1;
+    end
+            
+
+%     x_pad_left = x_in_min + 1;
+%     x_pad_right = length(bw_new(1,:)) - x_in_max;
+%     
+%     y_pad_lower = y_in_min + 1;
+%     y_pad_upper = length(bw_new(:,1)) - y_in_max;
+%     
+%     bw_new(x_pad_left:(end - x_pad_right), y_pad_lower:(end - y_pad_upper)) = bw_resized_inner;
+
+    bw_resized_inner = bw_new;
+end
+
+%Remove edge pixels outside of Outer_Edge
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+filled_Outer_Edge = imfill(Outer_Edge, 'holes');
+filled_Simulated = imfill(bw_resized_outer, 'holes');
+
+complement_Outer = imcomplement(filled_Outer_Edge);
+complement_Simulated = imcomplement(filled_Simulated);
+
+cleaned_outer = complement_Outer + complement_Simulated;
+cleaned_outer = logical(cleaned_outer);
+cleaned_outer = imcomplement(cleaned_outer);
+
+bw_outer_final = bwperim(cleaned_outer);
 
 %Create overlay
-overlay = double(imoverlay(Image_orig, bw_resized_outer/1000000, [1 0 0]));
-overlay = imoverlay(overlay, bw_resized_inner, [0 0 1]);
-figure
-Combined_overlay = imshow(overlay/max(max(max(overlay))));
+% overlay = double(imoverlay(Image_orig, bw_outer_final/1000000, [1 0 0]));
+% overlay = imoverlay(overlay, bw_resized_inner, [0 0 1]);
+% figure
+% Combined_overlay = imshow(overlay/max(max(max(overlay))));
 
-bw_outer = bw_resized_outer;
+bw_outer = bw_outer_final;
 bw_inner = bw_resized_inner;

@@ -39,7 +39,9 @@ bw_new = zeros(size(Detected_Edge));
 
 
 if strcmp(pad_method, 'even') == 1
+    
     %Pad zeros evenly along boarders
+    
     x_pad = abs(length(bw_new(1,:)) - x_diff);
     y_pad = abs(length(bw_new(:,1)) - y_diff);
 
@@ -50,6 +52,7 @@ if strcmp(pad_method, 'even') == 1
     y_pad_upper = floor(y_pad/2) + 1;
 
 elseif strcmp(pad_method, 'extreme') == 1
+    
     %Pad zeros based on extreme values of detected edges
 
     x_pad_left = x_min + 1;

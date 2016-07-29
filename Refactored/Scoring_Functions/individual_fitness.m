@@ -51,7 +51,7 @@ Manual_outline = imfill(Manual_outline,'holes');
 % end
 % 
 % fitness_score = score;
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %%%%%Test for gradient score%%%%%%%
@@ -62,7 +62,7 @@ Manual_outline = imfill(Manual_outline,'holes');
 %Compare all pixels of image, subtract 1 from score every time pixel does
 %not match
 
-Score 
+%Score 
 score = sum(sum(Manual_outline == Edge));
 diff_score = length(Manual_outline)^2 - score;
 

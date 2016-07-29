@@ -3,15 +3,23 @@ function Mutant_children = mutate( Children, Algo_depth, boundary_name )
 %   Basic mutation with added term to decrease mutation size as algorithm
 %   progresses
 
+%Override Algo_depth for testing
+
+%Algo_depth = 1;
+
 child_num = length(Children(:,1));
 
+alpha1 = (2*rand-1)/(100+Algo_depth);
+alpha2 = (2*rand-1)*(2/Algo_depth);
+
 for i = 1:child_num
-   Children(i,1) = Children(i,1) + (2*rand-1)/(100+Algo_depth);
-   Children(i,2) = Children(i,2) + (2*rand-1)*(2/Algo_depth);
-   Children(i,3) = Children(i,3) + (2*rand-1)*(2/Algo_depth);
-   Children(i,4) = Children(i,4) + (2*rand-1)/(100+Algo_depth);
-   Children(i,5) = Children(i,5) + (2*rand-1)/(100+Algo_depth);
+   Children(i,1) = Children(i,1) + alpha1;
+   Children(i,2) = Children(i,2) + alpha2;
+   Children(i,3) = Children(i,3) + alpha2;
+   Children(i,4) = Children(i,4) + alpha1;
+   Children(i,5) = Children(i,5) + alpha1;
 end
+
 
 if strcmp(boundary_name, 'Inner')
     for i = 1:child_num

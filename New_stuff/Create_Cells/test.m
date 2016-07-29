@@ -1,4 +1,4 @@
-BW = bw_out;
+BW = bw_in;
 Orientations = skeletonOrientation(BW,5); %5x5 box
 Onormal = Orientations + 90; %easier to view normals
 Onr = sind(Onormal); %vv
