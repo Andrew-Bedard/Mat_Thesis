@@ -1,4 +1,4 @@
-function [diff_inner, diff_outer] = Calculate_sim_detected_score(Outer_Edge, Inner_Edge, pad_method)
+function [diff_inner, diff_outer] = Calculate_sim_detected_score(Inner_Edge, Outer_Edge, pad_method)
 
 %Calculates the difference between detected inner edge: Inner_Edge and
 %every stage of the simulated edges, adjusted for size and position of
@@ -42,13 +42,21 @@ for i = 1:2:(numel(Simulated_contents) - 10)
 
     %Find difference (in number of pixels) between simulated and detected edge
     [diff_score, ~] = Simulated_Measured_diff(Outer_Edge, bw_resized);
-
+%%%%%%%%%%%%%%%%%%%% Testy test test%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%     diff_score = normxcorr2(Outer_Edge, bw_resized);
+%     
+%     diff_score = -max(diff_score(:));
+%%%%%%%%%%%%%%%%%%%%%%%%%
     diff_outer(i) = diff_score;
 
     bw_resized = Resize_and_Pad(Inner_Edge, bw_in, pad_method);
 
     [diff_score, ~] = Simulated_Measured_diff(Inner_Edge, bw_resized);
-
+    %%%%%%
+%     diff_score = normxcorr2(Inner_Edge, bw_resized);
+%     
+%     diff_score = -max(diff_score(:));
+    %%%%%%
     diff_inner(i) = diff_score;
     
 end

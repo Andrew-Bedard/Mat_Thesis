@@ -15,5 +15,14 @@ end
 % convert the grayscale image do a 2D double array
 Image_orig=double(Image_orig);
 
+%Images must be square, so if not resize such that its length and width are
+%equal to whichever is smaller
+
+imsize = size(Image_orig);
+
+if imsize(1) ~= imsize(2)
+    Image_orig = imresize(Image_orig, [min(imsize) min(imsize)]);
+end
+
 end
 

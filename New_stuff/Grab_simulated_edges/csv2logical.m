@@ -2,9 +2,15 @@
 %logical arrays that are needed to analysis
 
 contents = dir('C:\Users\Andy\Documents\School\Thesis\Data\Smoothen_Boundaries');
+dirpath = sprintf('C:/Users/Andy/Documents/School/Thesis/Mat_Thesis/New_stuff/Grab_simulated_edges/Simulated2bw');
 
+% If directory doesnt exist, create one
+if exist(dirpath,'dir') == 0
+  mkdir(dirpath);
+  addpath(dirpath);
+end
 
-for i = 3:numel(contents)
+for i = 3:4:numel(contents)
     
   filename = contents(i).name;
   

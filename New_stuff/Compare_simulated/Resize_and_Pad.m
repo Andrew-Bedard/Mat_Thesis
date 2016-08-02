@@ -1,7 +1,7 @@
 function Resized_Logical = Resize_and_Pad(Detected_Edge, Simulated_Edge, pad_method)
 
 %Resizes the simulated edge such that it's smallest x, y and largest x, y
-%values correspond.
+%values correspond to those of the detected edge.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Better description needed
@@ -31,7 +31,11 @@ y_max = max(Detected_coords(2,:));
 
 %Resize simulated boundary such that it has the same extreme x and y values
 bw_resize = double(Sim_unpadded);
-bw_resize = imresize(bw_resize, [x_diff y_diff]);
+try
+    bw_resize = imresize(bw_resize, [x_diff y_diff]);
+catch
+    bw_resize = double(Sim_unpadded);
+end
 
 %Create zero array, for padding as Detected_Edge and bw_resize are not of
 %the same dimensions

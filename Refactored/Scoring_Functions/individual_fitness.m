@@ -66,5 +66,10 @@ Manual_outline = imfill(Manual_outline,'holes');
 score = sum(sum(Manual_outline == Edge));
 diff_score = length(Manual_outline)^2 - score;
 
+%%%%%%%%%
+%Testing use of edge shape as score
+% score = normxcorr2(Manual_outline, Edge);
+% diff_score = diff_score/max(score(:));
+%%%%%%%%%
 
 fitness_score = -diff_score;

@@ -1,5 +1,5 @@
-function [Edge, Edge_overlay] = Edge_OutputAndSave_Inner_nonEA(fittest_individual_outer,...
-    Outer_Edge, Image_orig, Image_name, current_generation, boundary_name, Save_bool)
+function [Edge] = Edge_OutputAndSave_Inner_nonEA(fittest_individual_outer,...
+    Outer_Edge, Image_orig, Image_name, current_generation, boundary_name, Show_im, Save_bool)
 
 %EDGE_OUTPUTANDSAVE: takes parameters of fittest individual, performs
 %standar image processing with added canny edge detection for extra
@@ -66,15 +66,19 @@ Edge = imfill(Edge,'holes');
 Edge = edge(Edge,'canny',[],8);
 Edge = bwareafilt(Edge,1,'largest');
 
-% overlay original image with detected features
-overlay = double(imoverlay(Image_orig, Edge/1000000, [1 0 0]));
-figure
-Edge_overlay = imshow(overlay/max(max(max(overlay))));
-title('Detected features using PST overlaid with original image')
+    
+if Show_im == true
+    % overlay original image with detected features
+    overlay = double(imoverlay(Image_orig, Edge/1000000, [1 0 0]));
+    Edge_overlay = (overlay/max(max(max(overlay))));
+    figure
+    imshow(Edge_overlay);
+    title('Detected features using PST overlaid with original image')
+    pause(3);
+    close figure 1
+end
 % Save image (if Save_bool == true) as jpg and close figure window
 if Save_bool == true
     saveas(Edge_overlay,sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Kahikai/EA_prog/%s/%s/%d_gens',...
         boundary_name,Image_name,current_generation),'jpg');
 end
-pause(3);
-close figure 1
