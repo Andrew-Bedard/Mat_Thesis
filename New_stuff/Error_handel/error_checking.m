@@ -1,6 +1,8 @@
 function [bool_value_in, bool_value_out] = error_checking(bw_in, bw_out)
 
 %Function to check error conditions with edge placement
+bool_value_in = true;
+bool_value_out = true;
 
 in_filled = imfill(bw_in, 'holes');
 out_filled = imfill(bw_out, 'holes');
@@ -8,6 +10,7 @@ out_filled = imfill(bw_out, 'holes');
 %Does the inner edge extend beyond the outer
 
 combined_filled = in_filled + out_filled;
+combined_filled = logical(combined_filled);
 remainder = combined_filled - out_filled;
 
 if sum(sum(remainder)) ~= 0
@@ -20,8 +23,4 @@ im_area = length(bw_out)^2;
 
 if sum(sum(out_filled)) <= 0.3*im_area
     bool_value_out = false;
-end
-
-if bool_value_out == false
-    bool_value_in = false;
 end
