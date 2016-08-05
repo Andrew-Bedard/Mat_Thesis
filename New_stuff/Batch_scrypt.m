@@ -2,15 +2,15 @@ contents = dir('C:\Users\Andy\Documents\School\Thesis\Images\Kahikai\Images');
 save_directory = sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Batch_Results/Results');
 
 population_size = 100;
-generations = 20;
+generations = 30;
 im_save_int = 0;
 children_number = 5;
 parents_number = 10;
 %Number of individuals in tournament
 tourn_size = 40;
 loop_max = 10;
-save_edges = false;
-save_parameters = true;
+save_edges = true;
+save_parameters = false;
 
 for i = 1:numel(contents)
  %for i = 7:7
@@ -50,7 +50,7 @@ for i = 1:numel(contents)
     fittest_individual_outer = zeros(1,6);
     fittest_individual_outer(6) = -9999999;
     
-    for t = 1:5
+    for t = 1:1
         %EA loop for outer boundary
         [fittest_individual, current_generation] = EA_loop(children_number,parents_number, ...
             generations, loop_max, population_size, tourn_size, Image_orig, Image_name, ...
