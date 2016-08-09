@@ -28,19 +28,19 @@ end
 %Save output
 save_edges = false;
 
-for i = 8:14 %numel(image_dir)
+for i = 19:numel(image_dir)
   filename = image_dir(i).name;
   
   % Open the file specified in filename, do your processing...
   [~, Image_name] = fileparts(filename);
   
-  %Check if image is in the effective range of our algorithm
-  [bool_range, hpf_range]= Gast_Stage(Image_name, Dev_stages, effective_index);
+  %
+  [bool_range, hpf_range, dummy_index, dummy_lengths, longest_index] = Gast_Stage(Im_name, Dev_stages, effective_index)
   
   % Prevent from running on files not associated with image, and prevent
   % from running on images that are outside the effective range of this
   % method
-  if exist(sprintf('%s.jpg',Image_name),'file') ~= 0 && bool_range ~= 0
+  if exist(sprintf('%s.jpg',Image_name),'file') ~= 0
       
       % Name of directory to save binary images
       dirpath = save_directory;
@@ -107,7 +107,7 @@ for i = 8:14 %numel(image_dir)
 
                 %%%%%%%%%%%%%%%%%%%SIMULATED OVERLAY STUFF%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 pad_method = 'extreme';
-                [diff_inner, diff_outer] = Calculate_sim_detected_score(Inner_Edge, Outer_Edge, pad_method, hpf_range);
+                [diff_inner, diff_outer] = Calculate_sim_detected_score(Inner_Edge, Outer_Edge, pad_method);
                 [bw_out, bw_in] = Simulated_Overlay(diff_inner, diff_outer,...
                 Inner_Edge, Outer_Edge, Image_orig, 'inner', pad_method);
 
@@ -141,7 +141,7 @@ for i = 8:14 %numel(image_dir)
                 
                 %Re-calculate scores based off combined simulated-detected
                 %Edges, used for selection of best fit
-                [diff_inner, diff_outer] = Calculate_sim_detected_score(Inner_Edge, Outer_Edge, pad_method, hpf_range);
+                [diff_inner, diff_outer] = Calculate_sim_detected_score(Inner_Edge, Outer_Edge, pad_method);
                 %diff_list(j,:) = [diff_inner; diff_outer];
 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

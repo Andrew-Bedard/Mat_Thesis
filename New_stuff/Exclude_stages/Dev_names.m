@@ -1,4 +1,8 @@
-stages = {'zygote', 'cleavage', 'earlyblastula', 'midblastula', 'lateblastula', 'earlygastrula', ...
+%Just a script that produces a stuctured object for all the names of the
+%various stages of embryogenesis and assocated abreviations and hours post
+%fertilization information
+
+names = {'zygote', 'cleavage', 'earlyblastula', 'midblastula', 'lateblastula', 'earlygastrula', ...
     'midgastrula', 'lategastrula', 'earlyplanula', 'midplanula', 'lateplanula'};
 
 abrevs = {{'zy'}, {'cle'}, {'ebla', 'ebl'}, ...
@@ -12,15 +16,6 @@ hpf = {[0, 2],[2, 12],[12, 14],[14, 18],[18, 20],[20, 28],[28, 32],...
 
 %Create structure with naming conventions and hpf info
 
-Dev_stages = struct('names', stages, 'abrevs', abrevs, 'hpf', hpf);
-
-effective_range = {'earlyblastula', 'midblastula', 'lateblastula', 'earlygastrula', ...
-    'midgastrula'};
-
-%Find the index in our data structure where the effective range data lives
-index = zeros(1,numel(effective_range));
-
-for i = 1:numel(effective_range)
-    index(i) = find(strcmp(stages, effective_range{i}));
-end
-
+Dev_stages.names = names;
+Dev_stages.abrevs = abrevs;
+Dev_stages.hpf = hpf;

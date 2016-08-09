@@ -1,4 +1,4 @@
-function [bool_range, hpf_range] = Gast_Stage(Im_name, Dev_stages, effective_index)
+function [bool_range, hpf_range, dummy_index, dummy_lengths, longest_index] = Gast_Stage(Im_name, Dev_stages, effective_index)
 
 %Searches image name for information regarding the stage of gastrulation,
 %if the stage labelled in the image name is within the effective range,
@@ -11,7 +11,6 @@ hpf_range = [0,0];
 dummy_index = zeros(1,20);
 dummy_lengths = zeros(1,20);
 counter = 0;
-bool_range = false;
 
 for i = 1:length(effective_index)
     
@@ -38,16 +37,9 @@ for i = 1:length(effective_index)
     end
 end
 
-if bool_range == true;
-    %Get rid of zeros
-    dummy_index = dummy_index(dummy_index ~= 0);
-    dummy_lengths = dummy_lengths(dummy_lengths ~= 0);
+dummy_index = dummy_index(dummy_index ~= 0);
+dummy_lengths = dummy_lengths(dummy_lengths ~= 0);
 
-    %Find the index of the abreviation with the longest length
-    longest_index = find(max(dummy_lengths));
+longest_index = find(max(dummy_lengths));
 
-    %The index of the abreviation with the longest length is the gastrulation
-    %stage we are looking for, grab its hpf range
-    hpf_index = effective_index(dummy_index(longest_index));
-    hpf_range = Dev_stages.hpf{hpf_index};
-end
+hpf
