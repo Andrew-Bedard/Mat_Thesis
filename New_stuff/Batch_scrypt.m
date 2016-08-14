@@ -1,4 +1,4 @@
-    contents = dir('C:\Users\Andy\Documents\School\Thesis\Images\Kahikai\Images');
+contents = dir('C:\Users\Andy\Documents\School\Thesis\Images\Kahikai\Images');
 save_directory = sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Batch_Results/Results');
 
 population_size = 100;
