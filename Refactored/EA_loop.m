@@ -11,7 +11,7 @@ function [fittest_individual, current_generation] = EA_loop(children_number,pare
 
 
 %Create initial values for parents, children, fittest individual, and
-%best_scores
+%empty scores
 [ children, parents, fittest_individual, best_scores, children_scores, parents_scores] = ...
     Generate_initial(children_number, parents_number, generations, boundary_name);
 
