@@ -1,6 +1,28 @@
 contents = dir('C:\Users\Andy\Documents\School\Thesis\Images\Kahikai\Images');
 save_directory = sprintf('C:/Users/Andy/Documents/School/Thesis/Images/Batch_Results/Results');
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Copy pasted from No_outline_batch to use the hpf methods I created
+%Directory where post processed simulated boundaries live
+boundary_dir = dir('C:\Users\Andy\Documents\School\Thesis\Data\Simulated2bw');
+
+%The stages of the effective range of our method
+effective_range = {'midblastula', 'lateblastula', 'earlygastrula', ...
+    'midgastrula'};
+
+%Load in data structure with all information regarding names of stages,
+%abreviations attached to images and hours post fertilization times
+load('C:\Users\Andy\Documents\School\Thesis\Data\Dev_stages.mat');
+
+%Find the index in our data structure where the effective range data lives
+effective_index = zeros(1,numel(effective_range));
+
+for i = 1:numel(effective_range)
+    effective_index(i) = find(strcmp(Dev_stages.names, effective_range{i}));
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 population_size = 100;
 generations = 30;
 im_save_int = 0;
@@ -19,9 +41,12 @@ for i = 1:numel(contents)
   % Open the file specified in filename, do your processing...
   [~, Image_name] = fileparts(filename);
   
+  %Check if image is in the effective range of our algorithm
+  [bool_range, hpf_range]= Gast_Stage(Image_name, Dev_stages, effective_index);
+  
   % Prevent from trying to run EA on files not associated with image file,
   % or have already had EA run over
-  if exist(sprintf('%s.jpg',Image_name),'file') ~= 0 && exist(sprintf('%s_edges.mat', Image_name), 'file') == 0
+  if exist(sprintf('%s.jpg',Image_name),'file') ~= 0 && exist(sprintf('%s_edges.mat', Image_name), 'file') == 0 && bool_range ~= 0
       
       % Name of directory to save binary images
       dirpath = save_directory;
@@ -86,7 +111,7 @@ for i = 1:numel(contents)
     
     %%%%%%%%%%%%%%%%%%%SIMULATED OVERLAY STUFF%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     pad_method = 'extreme';
-    [diff_inner, diff_outer] = Calculate_sim_detected_score(Inner_Edge, Outer_Edge, pad_method);
+    [diff_inner, diff_outer] = Calculate_sim_detected_score(Inner_Edge, Outer_Edge, pad_method, hpf_range);
     [bw_out, bw_in] = Simulated_Overlay(diff_inner, diff_outer,...
     Inner_Edge, Outer_Edge, Image_orig, 'inner', pad_method);
     Outer_Edge = bw_out;
