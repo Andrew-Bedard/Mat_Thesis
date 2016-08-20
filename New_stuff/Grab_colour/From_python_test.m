@@ -1,11 +1,11 @@
 %Read in the original image, but the real deal, not greyscale
-Image_name = 'Bmp2_4_early_gast';
+Image_name = 'Nanos2ega1';
 Im_orig = imread(sprintf('%s.jpg',Image_name));
 
 rgb_img = im2double(Im_orig);
 
 %Import polygons from python program
-cell_polygons = loadjson('C:\Users\Andy\Documents\School\Thesis\Py_Thesis\NematostellaMorphGen-master\test3_polygons.json');
+cell_polygons = loadjson(sprintf('C:/Users/Andy/Documents/School/Thesis/Data/Polygons/%s_polygons.json',Image_name));
 field_names = fieldnames(cell_polygons);
 
 %Number of rows and cols
@@ -16,6 +16,7 @@ dummy_array = zeros(rgb_rows, rgb_cols);
 
 %Complete mask of all polygons combined
 bw_mask = logical(dummy_array);
+bw_subcells = logical(dummy_array);
 
 %Empty cell for each individual mask
 all_masks = cell(1,numel(field_names));
@@ -33,19 +34,39 @@ for i = 1:numel(field_names)
     current_name = field_names{i};
     current_name = current_name(current_name ~= '_');
     current_name = current_name(5:end);
+    
     %Added the +1 here to convert from python indexing to Matlab indexing
     poly_ids(i) = str2double(current_name) + 1;
     
     %Create polygon ROI from verticies
     poly = cell_polygons(1).(field_names{i});
     BW = roipoly(dummy_array, poly(:,2), poly(:,1));    
-    all_masks{i} = BW;   
-    bw_mask = bw_mask + BW;
+    all_masks{i} = BW;
     
+    %Full logical mask
+    bw_mask = bw_mask + BW;    
+    
+    %Save outline of subcells for display    
+    BWSUB = bwmorph(BW, 'remove');    
+    bw_subcells = bw_subcells + BWSUB;
 end
 
 %Sorts masks such that they are in order from 1:end based on ids
 [~, sorted_order] = sort(poly_ids);
+
+%Find point which will represent the aboral point of embryo
+[xMax,yMid] = find_aboral(bw_mask);
+
+dummy_list = zeros(1,numel(field_names));
+
+for i = 1:numel(field_names)
+    current_poly = cell_polygons(1).(field_names{sorted_order(i)});
+    dummy_list(i) = inpolygon(xMax,yMid,current_poly(:,2),current_poly(:,1));
+end
+
+starting_poly = find(dummy_list);
+
+sorted_order = circshift(sorted_order, -starting_poly + 1);
 
 % for i = 1:numel(field_names)
 %     
@@ -56,9 +77,11 @@ end
 
 %imshow(bw_mask)
 
-%Fill complete mask, take complement for taking colour average outside
-%embryo
+%Fill complete mask
 filled_mask = imfill(bw_mask, 'holes');
+
+%take complement for taking colour average outside
+%embryo
 filled_complement = imcomplement(filled_mask);
 %figure, imshow(filled_complement);
 
@@ -96,11 +119,36 @@ for i = 1:numel(field_names)
     
 end
 
-%Subtract mean value of other parts of the image
-newMeans = [mask_means(:,1) - rgb_means(1), mask_means(:,2) - rgb_means(2), mask_means(:,3) - rgb_means(3)];
+%Subtract mean value from background colour.
+correctedMeans = [mask_means(:,1) - rgb_means(1), mask_means(:,2) - rgb_means(2), mask_means(:,3) - rgb_means(3)];
+% 
+% %Lets plot this junk
+% figure, subplot(2,1,1), imshow(Im_orig)
+% 
+% hold on
+% subplot(2,1,2), plot(-correctedMeans(:,1),'r')
+% hold on
+% subplot(2,1,2),plot(-correctedMeans(:,2),'b')
+% hold on
+% subplot(2,1,2),plot(-correctedMeans(:,3),'g')
 
-%Lets plot this junk
+%windowed mean plotting
+
+smoothedMeans = window_mean(correctedMeans, 10);
+
+figure, subplot(2,2,1), imshow(Im_orig)
+title(sprintf('Original Image: %s', Image_name));
+
+%Make sure bw_subcells is logical
+bw_subcells = logical(bw_subcells);
+subplot(2,2,2),imshow(bw_subcells)
+title(sprintf('Subcell Division'))
+
+
+subplot(2,2,[3,4]), plot(-smoothedMeans(:,1),'r')
 hold on
-plot(newMeans(:,1),'r')
-plot(newMeans(:,2),'b')
-plot(newMeans(:,3),'g')
+subplot(2,2,[3,4]),plot(-smoothedMeans(:,2),'b')
+hold on
+subplot(2,2,[3,4]),plot(-smoothedMeans(:,3),'g')
+title('RGB colour levels')
+xlim([0,length(smoothedMeans)])
